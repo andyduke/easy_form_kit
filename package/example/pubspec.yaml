@@ -9,7 +9,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  easy_form:
+  easy_form_kit:
     path: ../
 
 dev_dependencies:

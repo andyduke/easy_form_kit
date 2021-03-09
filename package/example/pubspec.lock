@@ -43,7 +43,7 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.15.0"
-  easy_form:
+  easy_form_kit:
     dependency: "direct main"
     description:
       path: ".."
