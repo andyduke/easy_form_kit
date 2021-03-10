@@ -1,20 +1,9 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 
-// enum EasyFormSaveButtonState {
-//   normal,
-//   saving,
-// }
-
-typedef EasyFormFieldSaveCallback = Future<dynamic> Function(Map<String, dynamic> values);
-typedef EasyFormFieldSavedCallback = void Function(dynamic values);
-typedef EasyFormChangeCallback = void Function(EasyFormFieldState<dynamic> field);
-// typedef EasyFormLayoutBuilder = Widget Function(BuildContext context, Widget body, Widget saveButton, bool isSaving);
-// typedef EasyFormSaveButtonBuilder = Widget Function(
-//     BuildContext context, EasyFormSaveButtonState state, Widget child, Function saveForm);
-
 /// A container for grouping together multiple form field widgets
-/// (e.g. [TextField] widgets) and general handling of all form field values.
+/// (e.g. [TextField] widgets) and handling all of the form field values
+/// in a single callback.
 ///
 /// Each individual form field should be wrapped in a [EasyFormField] widget,
 /// with the [EasyForm] widget as a common ancestor of all of those.
@@ -44,8 +33,6 @@ typedef EasyFormChangeCallback = void Function(EasyFormFieldState<dynamic> field
 /// the result of the API request is passed to onSaved.
 /// While waiting for the API client to finish, the [EasyFormSaveButton]
 /// displays a [CircularProgressIndicator].
-///
-/// <!-- ![](https://flutter.github.io/assets-for-api-docs/assets/widgets/form.png) -->
 ///
 /// ```dart
 /// @override
@@ -132,7 +119,7 @@ class EasyForm extends StatefulWidget {
   /// Typical usage is as follows:
   ///
   /// ```dart
-  /// FormState form = Form.of(context);
+  /// EasyFormState form = EasyForm.of(context);
   /// form.save();
   /// ```
   static EasyFormState of(BuildContext context) {
@@ -165,8 +152,20 @@ class EasyForm extends StatefulWidget {
   /// will rebuild.
   final EasyFormChangeCallback onChanged;
 
+  /// Called when the form is being saved using the `save` method or
+  /// the [EasyFormSaveButton] button.
+  ///
+  /// A map with all the values of the form fields is passed as a parameter.
+  /// All fields [EasyFormField], [EasyFormTextField], etc. have a mandatory
+  /// `name` parameter, which is used as the name of the field in the map.
+  ///
+  /// The callback is asynchronous, for example, you can pass the form data to
+  /// the API and wait for the result of the request, the result can be returned
+  /// and it will be passed to `onSaved`.
   final EasyFormFieldSaveCallback onSave;
 
+  /// Called after the `onSave` callback completes, the result from `onSave`
+  /// is passed to `onSaved` as a parameter.
   final EasyFormFieldSavedCallback onSaved;
 
   /// Used to enable/disable form fields auto validation and update their error
@@ -174,148 +173,6 @@ class EasyForm extends StatefulWidget {
   ///
   /// {@macro flutter.widgets.form.autovalidateMode}
   final EasyAutovalidateMode autovalidateMode;
-
-  // final EasyFormLayoutBuilder layoutBuilder;
-
-  // final EasyFormButton saveButton;
-  // final Widget saveButton;
-
-  /*
-  final Widget saveButtonText;
-  final Widget savingButtonIndicator;
-  final EasyFormSaveButtonBuilder saveButtonBuilder;
-
-  static EdgeInsetsGeometry defaultSaveButtonPading = const EdgeInsets.all(8.0);
-  static double defaultSavingButtonIndicatorSize = 18;
-
-  static Widget defaultLayoutBuilder(BuildContext context, Widget body, Widget saveButton) {
-    if (saveButton == null) return body;
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        body,
-        saveButton,
-      ],
-    );
-  }
-
-  static Widget defaultSavingButtonIndicator(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    final Color color = theme?.colorScheme?.onPrimary;
-    return SizedBox(
-      width: defaultSavingButtonIndicatorSize,
-      height: defaultSavingButtonIndicatorSize,
-      child: Theme(
-        data: theme.copyWith(
-          accentColor: color,
-        ),
-        child: CircularProgressIndicator.adaptive(
-          strokeWidth: 2,
-        ),
-      ),
-    );
-  }
-
-  static Widget defaultSaveButtonBuilder(
-      BuildContext context, EasyFormSaveButtonState state, Widget child, Function saveForm) {
-    return ElevatedButton(
-      child: Padding(
-        padding: defaultSaveButtonPading,
-        child: ConstrainedBox(
-          constraints: BoxConstraints(
-            minHeight: defaultSavingButtonIndicatorSize,
-          ),
-          child: Center(
-            child: child,
-          ),
-        ),
-      ),
-      onPressed: saveForm,
-    );
-  }
-
-  /*
-  Widget _formSavingIndicatorBuilder(BuildContext context) {
-    final Widget indicator = savingButtonIndicator ?? defaultSavingButtonIndicator(context);
-
-    final ThemeData theme = Theme.of(context);
-    return Theme(
-      data: theme.copyWith(
-        accentColor: ElevatedButtonTheme.of(context)?.style?.foregroundColor?.resolve({}),
-      ),
-      child: SizedBox(
-        width: 22,
-        height: 22,
-        child: indicator,
-      ),
-    );
-  }
-  */
-
-  Widget _formLayoutBuilder(BuildContext context, Widget child, bool isSaving, Function doSaveForm) {
-    Widget button;
-
-    if (saveButtonText != null) {
-      final EasyFormSaveButtonState state = isSaving ? EasyFormSaveButtonState.saving : EasyFormSaveButtonState.normal;
-
-      final Widget saveButtonBody =
-          isSaving ? savingButtonIndicator ?? defaultSavingButtonIndicator(context) : saveButtonText;
-
-      final Widget saveButton = (saveButtonBuilder ?? defaultSaveButtonBuilder).call(
-        context,
-        state,
-        saveButtonBody,
-        doSaveForm,
-      );
-
-      button = IgnorePointer(
-        ignoring: isSaving,
-        child: saveButton,
-      );
-    }
-
-    return (layoutBuilder ?? defaultLayoutBuilder).call(context, child, button);
-  }
-  */
-
-  /*
-  static EasyFormLayoutBuilder defaultLayoutBuilder = _defaultLayoutBuilder;
-
-  static Widget _defaultLayoutBuilder(BuildContext context, Widget body, Widget saveButton, bool isSaving) {
-    if (saveButton == null) return body;
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        body,
-        saveButton,
-      ],
-    );
-  }
-
-  Widget _formLayoutBuilder(BuildContext context, Widget child, bool isSaving, Key saveButtonKey, Function doSaveForm) {
-    Widget button;
-
-    if (saveButton != null) {
-      // final EasyFormButtonState state = isSaving ? EasyFormButtonState.indicator : EasyFormButtonState.normal;
-      // final Widget saveButtonBody = saveButton.build(context, state, doSaveForm);
-      // final Widget saveButtonBody = saveButton;
-      // button = IgnorePointer(
-      //   ignoring: isSaving,
-      //   child: KeyedSubtree(
-      //     key: saveButtonKey,
-      //     child: saveButtonBody,
-      //   ),
-      // );
-      button = saveButton;
-    }
-
-    return (layoutBuilder ?? defaultLayoutBuilder).call(context, child, button, isSaving);
-  }
-  */
 
   @override
   EasyFormState createState() => EasyFormState();
@@ -328,8 +185,6 @@ class EasyForm extends StatefulWidget {
 ///
 /// Typically obtained via [EasyForm.of].
 class EasyFormState extends State<EasyForm> {
-  final Key _saveButtonKey = UniqueKey();
-  // bool _isSaving = false;
   final ValueNotifier<bool> _isSaving = ValueNotifier(false);
 
   int _generation = 0;
@@ -384,13 +239,6 @@ class EasyFormState extends State<EasyForm> {
         formState: this,
         generation: _generation,
         child: widget.child,
-        // child: widget._formLayoutBuilder(
-        //   context,
-        //   widget.child,
-        //   _isSaving.value,
-        //   _saveButtonKey,
-        //   save,
-        // ),
       ),
     );
   }
@@ -407,17 +255,11 @@ class EasyFormState extends State<EasyForm> {
     }
 
     _isSaving.value = true;
-    // setState(() {
-    //   _isSaving = true;
-    // });
 
     final dynamic data = await widget.onSave?.call(values);
     widget.onSaved?.call(data);
 
     _isSaving.value = false;
-    // setState(() {
-    //   _isSaving = false;
-    // });
 
     return true;
   }
@@ -493,6 +335,24 @@ class _FormScope extends InheritedWidget {
   bool updateShouldNotify(_FormScope old) => _generation != old._generation;
 }
 
+/// Signature for save callback.
+///
+/// A map with all the values of the form fields is passed as a parameter.
+/// All fields [EasyFormField], [EasyFormTextField], etc. have a mandatory
+/// `name` parameter, which is used as the name of the field in the map.
+typedef EasyFormFieldSaveCallback = Future<dynamic> Function(Map<String, dynamic> values);
+
+/// Signature for saved callback.
+///
+/// Called after the `onSave` callback completes, the result from `onSave`
+/// is passed to `onSaved` as a parameter.
+typedef EasyFormFieldSavedCallback = void Function(dynamic values);
+
+/// Signature for the callback when the field changes.
+typedef EasyFormChangeCallback = void Function(EasyFormFieldState<dynamic> field);
+
+// --- EasyFormField
+
 /// Signature for validating a form field.
 ///
 /// Returns an error string to display if the input is invalid, or null
@@ -513,6 +373,9 @@ typedef EasyFormFieldBuilder<T> = Widget Function(EasyFormFieldState<T> field);
 
 /// A single form field.
 ///
+/// The `name` field is required to set the key in the map for onSave in
+/// the [EasyForm] widget.
+///
 /// This widget maintains the current state of the form field, so that updates
 /// and validation errors are visually reflected in the UI.
 ///
@@ -532,10 +395,12 @@ typedef EasyFormFieldBuilder<T> = Widget Function(EasyFormFieldState<T> field);
 ///
 ///  * [EasyForm], which is the widget that aggregates the form fields.
 ///  * [TextField], which is a commonly used form field for entering text.
+///  * [EasyTextFormField], a convenience widget that wraps a [TextField] widget
+///    in a [EasyFormField].
 class EasyFormField<T> extends StatefulWidget {
   /// Creates a single form field.
   ///
-  /// The [builder] argument must not be null.
+  /// The [name] and [builder] arguments must not be null.
   const EasyFormField({
     Key key,
     @required this.name,
@@ -550,9 +415,12 @@ class EasyFormField<T> extends StatefulWidget {
         super(key: key);
 
   /// Name of the field.
+  ///
+  /// The field name is used to set the key in the map with all the form values
+  /// that are passed to the [onSave] of the [EasyForm] widget.
   final String name;
 
-  /// Focus node
+  /// Focus node.
   final FocusNode focusNode;
 
   /// An optional method to call with the final value when the form is saved via
@@ -563,13 +431,13 @@ class EasyFormField<T> extends StatefulWidget {
   /// display if the input is invalid, or null otherwise.
   ///
   /// The returned value is exposed by the [EasyFormFieldState.errorText] property.
-  /// The [TextFormField] uses this to override the [InputDecoration.errorText]
+  /// The [EasyTextFormField] uses this to override the [InputDecoration.errorText]
   /// value.
   ///
   /// Alternating between error and normal state can cause the height of the
-  /// [TextFormField] to change if no other subtext decoration is set on the
+  /// [EasyTextFormField] to change if no other subtext decoration is set on the
   /// field. To create a field whose height is fixed regardless of whether or
-  /// not an error is displayed, either wrap the  [TextFormField] in a fixed
+  /// not an error is displayed, either wrap the [EasyTextFormField] in a fixed
   /// height parent like [SizedBox], or set the [InputDecoration.helperText]
   /// parameter to a space.
   final EasyFormFieldValidator<T> validator;
@@ -646,6 +514,7 @@ class EasyFormFieldState<T> extends State<EasyFormField<T>> {
   ///  * [validate], which may update [errorText] and [hasError].
   bool get isValid => widget.validator?.call(_value) == null;
 
+  /// Sets the input focus to this field.
   void focus() {
     if (focusNode.hasFocus) {
       focusNode.unfocus();
@@ -657,6 +526,7 @@ class EasyFormFieldState<T> extends State<EasyFormField<T>> {
     }
   }
 
+  /// Removes input focus from this field.
   void unfocus() {
     focusNode.unfocus();
   }

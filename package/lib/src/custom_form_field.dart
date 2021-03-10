@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'easy_form.dart';
-
-export 'package:flutter/services.dart' show SmartQuotesType, SmartDashesType;
 
 typedef CreateControllerCallback<C, T> = C Function(T value);
 typedef RecreateControllerCallback<C> = C Function(C oldController);
@@ -13,18 +10,17 @@ typedef EasyFormCustomFieldChangeHandler<T> = void Function(T value);
 typedef EasyFormCustomFieldBuilder<T, C> = Widget Function(
     _EasyCustomFormFieldState fieldState, EasyFormCustomFieldChangeHandler<T> onChangedHandler);
 
-/// A [FormField] that contains a [TextField].
+/// An extensible base class for wrapping form fields.
 ///
-/// This is a convenience widget that wraps a [TextField] widget in a
-/// [FormField].
+/// It is used as a base class for creating fields of custom types,
+/// as well as for creating a custom field on the fly in the widget tree.
 ///
-/// A [Form] ancestor is not required. The [Form] simply makes it easier to
-/// save, reset, or validate multiple fields at once. To use without a [Form],
-/// pass a [GlobalKey] to the constructor and use [GlobalKey.currentState] to
-/// save or reset the form field.
+/// For a custom field type, you must specify two general types:
+/// the first `T` is the field value type, and the second `C` is
+/// the controller type.
 ///
 /// When a [controller] is specified, its [Controller.value]
-/// defines the [initialValue]. If this [FormField] is part of a scrolling
+/// defines the [initialValue]. If this [EasyCustomFormField] is part of a scrolling
 /// container that lazily constructs its children, like a [ListView] or a
 /// [CustomScrollView], then a [controller] should be specified.
 /// The controller's lifetime should be managed by a stateful widget ancestor
@@ -37,103 +33,56 @@ typedef EasyFormCustomFieldBuilder<T, C> = Widget Function(
 /// when it is no longer needed. This will ensure we discard any resources used
 /// by the object.
 ///
-/// By default, `decoration` will apply the [ThemeData.inputDecorationTheme] for
-/// the current context to the [InputDecoration], see
-/// [InputDecoration.applyDefaults].
-///
-/// For a documentation about the various parameters, see [TextField].
-///
-/// {@tool snippet}
-///
-/// Creates a [EasyCustomFormField] with an [InputDecoration] and validator function.
-///
-/// ![If the user enters valid text, the TextField appears normally without any warnings to the user](https://flutter.github.io/assets-for-api-docs/assets/material/text_form_field.png)
-///
-/// ![If the user enters invalid text, the error message returned from the validator function is displayed in dark red underneath the input](https://flutter.github.io/assets-for-api-docs/assets/material/text_form_field_error.png)
+/// Creates a [EasyCustomFormField] with an custom field and controller.
 ///
 /// ```dart
-/// TextFormField(
-///   decoration: const InputDecoration(
-///     icon: Icon(Icons.person),
-///     hintText: 'What do people call you?',
-///     labelText: 'Name *',
+/// EasyCustomFormField<Color, ColorFieldController>(
+///   name: 'color',
+///   initialValue: Colors.teal,
+///   controllerBuilder: (value) => ColorFieldController(value),
+///   builder: (fieldState, onChangedHandler) => ColorField(
+///     controller: fieldState.controller,
+///     onChange: onChangedHandler,
 ///   ),
-///   onSaved: (String value) {
-///     // This optional block of code can be used to run
-///     // code when the user saves the form.
-///   },
-///   validator: (String value) {
-///     return value.contains('@') ? 'Do not use the @ char.' : null;
-///   },
 /// )
 /// ```
-/// {@end-tool}
 ///
-/// {@tool dartpad --template=stateful_widget_material}
-/// This example shows how to move the focus to the next field when the user
-/// presses the SPACE key.
-///
-/// ```dart imports
-/// import 'package:flutter/services.dart';
-/// ```
+/// Creates a [TextField] on the fly.
 ///
 /// ```dart
-/// Widget build(BuildContext context) {
-///   return Material(
-///     child: Center(
-///       child: Shortcuts(
-///         shortcuts: <LogicalKeySet, Intent>{
-///           // Pressing space in the field will now move to the next field.
-///           LogicalKeySet(LogicalKeyboardKey.space): const NextFocusIntent(),
-///         },
-///         child: FocusTraversalGroup(
-///           child: Form(
-///             autovalidateMode: EasyAutovalidateMode.always,
-///             onChanged: () {
-///               Form.of(primaryFocus.context).save();
-///             },
-///             child: Wrap(
-///               children: List<Widget>.generate(5, (int index) {
-///                 return Padding(
-///                   padding: const EdgeInsets.all(8.0),
-///                   child: ConstrainedBox(
-///                     constraints: BoxConstraints.tight(const Size(200, 50)),
-///                     child: TextFormField(
-///                       onSaved: (String value) {
-///                         print('Value for field $index saved as "$value"');
-///                       },
-///                     ),
-///                   ),
-///                 );
-///               }),
-///             ),
-///           ),
-///         ),
-///       ),
+/// EasyCustomFormField<String, TextEditingController>(
+///   name: 'first_name',
+///   initialValue: 'some text',
+///   controllerBuilder: (value) => TextEditingController(text: value),
+///   controllerRebuilder: (oldController) => TextEditingController.fromValue(oldController.value),
+///   valueGet: (controller) => controller.text,
+///   valueSet: (controller, newText) => controller.text = newText,
+///   builder: (fieldState, onChangedHandler) => TextField(
+///     controller: fieldState.controller,
+///     focusNode: fieldState.focusNode,
+///     decoration: InputDecoration(
+///       errorText: fieldState.errorText,
 ///     ),
-///   );
-/// }
+///     onChanged: onChangedHandler,
+///   ),
+///   validator: (value) => value.isEmpty ? 'Field is required.' : null,
+/// ),
 /// ```
-/// {@end-tool}
 ///
 /// See also:
 ///
 ///  * <https://material.io/design/components/text-fields.html>
 ///  * [TextField], which is the underlying text field without the [Form]
 ///    integration.
-///  * [InputDecorator], which shows the labels and other visual elements that
-///    surround the actual text editing widget.
 ///  * Learn how to use a [Controller] in one of our [cookbook recipes](https://flutter.dev/docs/cookbook/forms/text-field-changes#2-use-a-texteditingcontroller).
 class EasyCustomFormField<T, C extends ValueNotifier> extends EasyFormField<T> {
-  /// Creates a [FormField] that contains a [TextField].
+  /// Creates a [EasyCustomFormField] that contains a custom field.
   ///
   /// When a [controller] is specified, [initialValue] must be null (the
   /// default). If [controller] is null, then a [Controller]
-  /// will be constructed automatically and its `text` will be initialized
-  /// to [initialValue] or the empty string.
+  /// will be constructed automatically and its value will be initialized
+  /// to [initialValue] or the empty value.
   ///
-  /// For documentation about the various parameters, see the [TextField] class
-  /// and [new TextField], the constructor.
   EasyCustomFormField({
     Key key,
     @required String name,
@@ -144,86 +93,22 @@ class EasyCustomFormField<T, C extends ValueNotifier> extends EasyFormField<T> {
     this.valueGet,
     this.valueSet,
     @required EasyFormCustomFieldBuilder<T, C> builder,
-    FocusNode focusNode,
-    InputDecoration decoration = const InputDecoration(),
-    TextInputType keyboardType,
-    TextCapitalization textCapitalization = TextCapitalization.none,
-    TextInputAction textInputAction,
-    TextStyle style,
-    StrutStyle strutStyle,
-    TextDirection textDirection,
-    TextAlign textAlign = TextAlign.start,
-    TextAlignVertical textAlignVertical,
-    bool autofocus = false,
-    bool readOnly = false,
-    ToolbarOptions toolbarOptions,
-    bool showCursor,
-    String obscuringCharacter = '•',
-    bool obscureText = false,
-    bool autocorrect = true,
-    SmartDashesType smartDashesType,
-    SmartQuotesType smartQuotesType,
-    bool enableSuggestions = true,
-    bool maxLengthEnforced = true,
-    int maxLines = 1,
-    int minLines,
-    bool expands = false,
-    int maxLength,
     ValueChanged<T> onChanged,
-    GestureTapCallback onTap,
-    VoidCallback onEditingComplete,
-    ValueChanged<T> onFieldSubmitted,
     FormFieldSetter<T> onSaved,
     FormFieldValidator<T> validator,
-    List<TextInputFormatter> inputFormatters,
     bool enabled,
-    double cursorWidth = 2.0,
-    double cursorHeight,
-    Radius cursorRadius,
-    Color cursorColor,
-    Brightness keyboardAppearance,
-    EdgeInsets scrollPadding = const EdgeInsets.all(20.0),
-    bool enableInteractiveSelection = true,
-    InputCounterWidgetBuilder buildCounter,
-    ScrollPhysics scrollPhysics,
-    Iterable<String> autofillHints,
     EasyAutovalidateMode autovalidateMode = EasyAutovalidateMode.disabled,
   })  : assert(initialValue == null || controller == null),
-        assert(textAlign != null),
-        assert(autofocus != null),
-        assert(readOnly != null),
-        assert(obscuringCharacter != null && obscuringCharacter.length == 1),
-        assert(obscureText != null),
-        assert(autocorrect != null),
-        assert(enableSuggestions != null),
-        assert(maxLengthEnforced != null),
-        assert(scrollPadding != null),
-        assert(maxLines == null || maxLines > 0),
-        assert(minLines == null || minLines > 0),
-        assert(
-          (maxLines == null) || (minLines == null) || (maxLines >= minLines),
-          "minLines can't be greater than maxLines",
-        ),
-        assert(expands != null),
-        assert(
-          !expands || (maxLines == null && minLines == null),
-          'minLines and maxLines must be null when expands is true.',
-        ),
-        assert(!obscureText || maxLines == 1, 'Obscured fields cannot be multiline.'),
-        assert(maxLength == null || maxLength > 0),
-        assert(enableInteractiveSelection != null),
         super(
           key: key,
           name: name,
           initialValue: controller != null ? controller.value : (initialValue ?? null),
           onSaved: onSaved,
           validator: validator,
-          enabled: enabled ?? decoration?.enabled ?? true,
+          enabled: enabled ?? true,
           autovalidateMode: autovalidateMode,
           builder: (EasyFormFieldState<T> field) {
             final _EasyCustomFormFieldState<T, C> state = field as _EasyCustomFormFieldState<T, C>;
-            // final InputDecoration effectiveDecoration =
-            //     (decoration ?? const InputDecoration()).applyDefaults(Theme.of(field.context).inputDecorationTheme);
             void onChangedHandler(T value) {
               if (onChanged != null) {
                 onChanged(value);
@@ -235,24 +120,78 @@ class EasyCustomFormField<T, C extends ValueNotifier> extends EasyFormField<T> {
           },
         );
 
-  /// Controls the text being edited.
+  /// Controls the value being edited.
   ///
   /// If null, this widget will create its own [Controller] and
   /// initialize its [Controller.value] with [initialValue].
   final C controller;
 
+  /// A builder that instantiates a controller of type `C` for a value of type `T`.
+  ///
+  /// Used to create a field on the fly in the widget tree.
+  /// For a widget inheriting from `EasyFormCustomField`, override
+  /// the `createController` method instead of using this builder.
   final CreateControllerCallback<C, T> controllerBuilder;
+
+  /// A builder that recreates a controller from an old controller,
+  /// if not specified, the `controllerBuilder` builder will be used.
+  ///
+  /// Useful when using the [TextEditingController.fromValue] constructor.
+  /// ```dart
+  /// controllerRebuilder: (oldController) => TextEditingController.fromValue(oldController.value),
+  /// ```
+  ///
+  /// Used to create a field on the fly in the widget tree.
+  /// For a widget inheriting from `EasyFormCustomField`, override
+  /// the `recreateController` method instead of using this builder.
   final RecreateControllerCallback<C> controllerRebuilder;
 
+  /// Callback to get the value from the controller, if not set
+  /// then the controller's `value` property is used.
+  ///
+  /// For example used for [TextEditingController] to get
+  /// the value from the `text` property.
+  /// ```dart
+  /// valueGet: (controller) => controller.text,
+  /// ```
   final ValueOfGetter<T, C> valueGet;
+
+  /// Callback to set controller value, if not set - controller's
+  /// `value` property is used.
+  ///
+  /// For example used for [TextEditingController] to set
+  /// the value of the `text` property.
+  /// ```dart
+  /// valueSet: (controller, newText) => controller.text = newText,
+  /// ```
   final ValueOfSetter<T, C> valueSet;
 
+  /// A builder that instantiates a controller of type `C` for
+  /// a value of type `T`.
+  ///
+  /// Calls the `controllerBuilder` callback by default.
+  /// Can be overridden in a descendant for custom implementation.
   C createController(T value) => controllerBuilder?.call(value);
+
+  /// A builder that recreates a controller from an old controller.
+  ///
+  /// By default, it calls the `controllerRebuilder` callback or,
+  /// if not defined, it calls the `controllerBuilder`.
+  /// Can be overridden in a descendant for custom implementation.
   C recreateController(C oldController) => (controllerRebuilder != null)
       ? controllerRebuilder.call(oldController)
       : controllerBuilder?.call(oldController.value);
 
+  /// Getter, to get the value from the controller.
+  ///
+  /// By default, it calls the `valueGet` callback, if not defined,
+  /// it returns the controller's `value` property.
   T valueOf(C controller) => (valueGet != null) ? valueGet.call(controller) : controller.value;
+
+  /// Setter, to set the controller value.
+  ///
+  /// By default, it calls the `valueSet` callback, if not defined,
+  /// it sets the `value` property of the controller.
   setValue(C controller, T value) => (valueSet != null) ? valueSet.call(controller, value) : controller.value = value;
 
   @override

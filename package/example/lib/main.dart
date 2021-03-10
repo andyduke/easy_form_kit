@@ -1,5 +1,5 @@
 import 'dart:math';
-import 'package:easy_form/easy_form.dart';
+import 'package:easy_form_kit/easy_form.dart';
 import 'package:flutter/material.dart';
 
 /*
@@ -224,13 +224,15 @@ class FormExampleScreen extends StatelessWidget {
               // Sep
               const SizedBox(height: 24),
 
-              /*
-              EasyCustomFormField<String, ValueFieldController>(
+              EasyCustomFormField<String, TextEditingController>(
                 name: 'custom',
-                initialValue: 'zzzz',
-                controllerBuilder: (value) => ValueFieldController<String>(value),
+                initialValue: 'some text',
+                controllerBuilder: (value) => TextEditingController(text: value),
+                controllerRebuilder: (oldController) => TextEditingController.fromValue(oldController.value),
+                valueGet: (controller) => controller.text,
+                valueSet: (controller, newText) => controller.text = newText,
                 builder: (fieldState, onChangedHandler) => TextField(
-                  controller: TextEditingController(text: fieldState.value),
+                  controller: fieldState.controller,
                   focusNode: fieldState.focusNode,
                   decoration: InputDecoration(
                     errorText: fieldState.errorText,
@@ -239,7 +241,9 @@ class FormExampleScreen extends StatelessWidget {
                 ),
                 validator: (value) => value.isEmpty ? 'Field is required.' : null,
               ),
-              */
+
+              // Sep
+              const SizedBox(height: 24),
 
               EasyCustomFormField<Color, ColorController>(
                 name: 'color',
