@@ -2,16 +2,32 @@ import 'package:flutter/material.dart';
 import 'action_button.dart';
 import '../easy_form.dart';
 
+///Signature for the save indicator builder
 typedef EasyFormSaveButtonIndicatorBuilder = Widget Function(BuildContext context, Size size);
+
+/// Signature for button content layout builder
 typedef EasyFormSaveButtonLayoutBuilder = Widget Function(BuildContext context, Widget body, Widget indicator);
 
+/// The builder of the button that, when pressed,
+/// causes the form fields to be saved and shows
+/// an indicator in the process of saving.
+///
+/// The widget has two constructors, the standard [EasyFormSaveButton],
+/// in which you can specify any widget in the `child` argument as
+/// the button content, and the [EasyFormSaveButton.text] constructor,
+/// in which you can specify the text on the button.
+///
 class EasyFormSaveButton extends EasyFormActionButton {
+  /// Default indicator size
   static const Size kIndicatorSize = const Size(18, 18);
 
+  /// Indicator size
   final Size indicatorSize;
+
   final EasyFormSaveButtonIndicatorBuilder _indicatorBuilder;
   final EasyFormSaveButtonLayoutBuilder _layoutBuilder;
 
+  /// Creates a widget that creates a form save button.
   const EasyFormSaveButton({
     Key key,
     @required Widget child,
@@ -32,6 +48,7 @@ class EasyFormSaveButton extends EasyFormActionButton {
           alignment: alignment,
         );
 
+  /// Creates a widget that creates a form save button with text as a child.
   factory EasyFormSaveButton.text(
     String text, {
     Size indicatorSize = kIndicatorSize,
@@ -52,9 +69,20 @@ class EasyFormSaveButton extends EasyFormActionButton {
     );
   }
 
+  /// The builder of the indicator inside the button displayed
+  /// during the save process.
+  ///
+  /// See also:
+  ///
+  ///  * [defaultIndicatorBuilder], where the indicator builder can be set globally.
   @protected
   EasyFormSaveButtonIndicatorBuilder get indicatorBuilder => _indicatorBuilder ?? defaultIndicatorBuilder;
 
+  /// Button content layout builder.
+  ///
+  /// See also:
+  ///
+  ///  * [defaultLayoutBuilder], where the layout builder can be set globally.
   @protected
   EasyFormSaveButtonLayoutBuilder get layoutBuilder => _layoutBuilder ?? defaultLayoutBuilder;
 
@@ -77,6 +105,28 @@ class EasyFormSaveButton extends EasyFormActionButton {
 
   // Default builders
 
+  @override
+  EasyFormActionButtonBuilder get builder => super.builder ?? defaultBuilder;
+
+  /// The default button builder, creates an [ElevatedButton].
+  /// You can reassign to your builder globally so that you
+  /// don't pass the builder function every time
+  /// you create a widget.
+  ///
+  /// See also:
+  ///
+  ///  * [EasyFormActionButton.defaultBuilder] which is the default.
+  ///
+  static EasyFormActionButtonBuilder defaultBuilder = EasyFormActionButton.defaultBuilder;
+
+  /// The default button content layout builder.
+  ///
+  /// You can reassign to your builder globally so that you
+  /// don't pass the builder function every time
+  /// you create a widget.
+  ///
+  /// By default, this is a [Stack] with a centered indicator
+  /// on top of the button's content.
   static EasyFormSaveButtonLayoutBuilder defaultLayoutBuilder = _defaultLayoutBuilder;
 
   static Widget _defaultLayoutBuilder(BuildContext context, Widget body, Widget indicator) {
@@ -93,6 +143,14 @@ class EasyFormSaveButton extends EasyFormActionButton {
     );
   }
 
+  /// Default constructor for button indicator on save.
+  ///
+  /// You can reassign to your builder globally so that you
+  /// don't pass the builder function every time
+  /// you create a widget.
+  ///
+  /// By default, this is a [CircularProgressIndicator] with
+  /// a size of 18x18 and the color of the text from the [ElevatedButton].
   static EasyFormSaveButtonIndicatorBuilder defaultIndicatorBuilder = _defaultIndicatorBuilder;
 
   static Widget _defaultIndicatorBuilder(BuildContext context, Size size) {
@@ -112,250 +170,3 @@ class EasyFormSaveButton extends EasyFormActionButton {
     );
   }
 }
-
-/*
-enum EasyFormButtonState {
-  normal,
-  indicator,
-}
-
-typedef EasyFormSaveButtonBuilder = Widget Function(
-    BuildContext context, Widget child, VoidCallback onPressed, EasyFormSaveButton button);
-typedef EasyFormSaveButtonIndicatorBuilder = Widget Function(BuildContext context, EasyFormSaveButton button);
-typedef EasyFormSaveButtonLayoutBuilder = Widget Function(BuildContext context, Widget body, Widget indicator);
-
-class EasyFormSaveButton extends StatelessWidget {
-  static const Size kIndicatorSize = const Size(18, 18);
-
-  static const EdgeInsetsGeometry kPadding = const EdgeInsets.all(8.0);
-
-  final Widget child;
-  final Widget indicator;
-  final EdgeInsetsGeometry padding;
-  final Size indicatorSize;
-  final EasyFormSaveButtonBuilder builder;
-
-  const EasyFormSaveButton({
-    Key key,
-    @required this.child,
-    this.builder,
-    this.indicator,
-    this.indicatorSize = kIndicatorSize,
-    this.padding = kPadding,
-  })  : assert(child != null),
-        assert(indicatorSize != null),
-        super(key: key);
-
-  factory EasyFormSaveButton.text(
-    String text, {
-    Key key,
-    EasyFormSaveButtonBuilder builder,
-    Widget indicator,
-    Size indicatorSize = kIndicatorSize,
-    EdgeInsetsGeometry padding = kPadding,
-  }) {
-    return EasyFormSaveButton(
-      key: key,
-      child: Text(text),
-      indicator: indicator,
-      indicatorSize: indicatorSize,
-      builder: builder,
-      padding: padding,
-    );
-  }
-
-  Widget _bodyBuilder(BuildContext context, Widget child) {
-    return Padding(
-      padding: padding,
-      child: Center(
-        child: child,
-      ),
-    );
-  }
-
-  static EasyFormSaveButtonLayoutBuilder defaultLayoutBuilder = _defaultLayoutBuilder;
-
-  static Widget _defaultLayoutBuilder(BuildContext context, Widget body, Widget indicator) {
-    return Stack(
-      clipBehavior: Clip.none,
-      children: <Widget>[
-        body,
-        Positioned.fill(
-          child: Center(
-            child: indicator,
-          ),
-        ),
-      ],
-    );
-  }
-
-  static EasyFormSaveButtonBuilder defaultBuilder = _defaultBuilder;
-
-  static Widget _defaultBuilder(BuildContext context, Widget child, VoidCallback onPressed, EasyFormSaveButton button) {
-    return ElevatedButton(
-      key: button.key,
-      child: child,
-      onPressed: onPressed,
-    );
-  }
-
-  static EasyFormSaveButtonIndicatorBuilder defaultIndicatorBuilder = _defaultIndicatorBuilder;
-
-  static Widget _defaultIndicatorBuilder(BuildContext context, EasyFormSaveButton button) {
-    final ThemeData theme = Theme.of(context);
-    final Color color = theme?.colorScheme?.onPrimary;
-    return SizedBox(
-      width: button.indicatorSize.width,
-      height: button.indicatorSize.height,
-      child: Theme(
-        data: theme.copyWith(
-          accentColor: color,
-        ),
-        child: CircularProgressIndicator.adaptive(
-          strokeWidth: 2,
-        ),
-      ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final form = EasyForm.of(context);
-    return ValueListenableBuilder(
-      valueListenable: form.isSaving,
-      builder: (context, isSaving, _) {
-        final Widget body = _bodyBuilder(context, child);
-        final Widget layout = defaultLayoutBuilder(
-          context,
-          isSaving ? Opacity(child: body, opacity: 0) : body,
-          isSaving ? (indicator ?? defaultIndicatorBuilder(context, this)) : SizedBox.fromSize(size: indicatorSize),
-        );
-        final Widget button = (builder ?? defaultBuilder)?.call(context, layout, form.save, this) ?? const SizedBox();
-        return IgnorePointer(
-          ignoring: isSaving,
-          child: button,
-        );
-      },
-    );
-  }
-}
-*/
-
-/*
-enum EasyFormButtonState {
-  normal,
-  indicator,
-}
-
-typedef EasyFormSaveButtonBuilder = Widget Function(
-    BuildContext context, Widget child, VoidCallback onPressed, EasyFormSaveButton button);
-typedef EasyFormSaveButtonIndicatorBuilder = Widget Function(BuildContext context, EasyFormSaveButton button);
-
-class EasyFormSaveButton extends StatelessWidget {
-  static const Size kMinimumSize = const Size(48, 18);
-  // static const double kMinWidth = 18;
-  // static const double kMinHeight = 18;
-  static const EdgeInsetsGeometry kPadding = const EdgeInsets.all(8.0);
-
-  final Widget child;
-  final Widget indicator;
-  final EdgeInsetsGeometry padding;
-  // final double minHeight;
-  final Size minimumSize;
-  final EasyFormSaveButtonBuilder builder;
-
-  const EasyFormSaveButton({
-    Key key,
-    @required this.child,
-    this.builder,
-    this.indicator,
-    // this.minHeight = kMinHeight,
-    this.minimumSize = kMinimumSize,
-    this.padding = kPadding,
-  })  : assert(child != null),
-        // assert(minHeight != null),
-        assert(minimumSize != null),
-        super(key: key);
-
-  factory EasyFormSaveButton.text(
-    String text, {
-    Key key,
-    EasyFormSaveButtonBuilder builder,
-    Widget indicator,
-    EdgeInsetsGeometry padding = kPadding,
-    // double minHeight = kMinHeight,
-    Size minimumSize = kMinimumSize,
-  }) {
-    return EasyFormSaveButton(
-      key: key,
-      child: Text(text),
-      indicator: indicator,
-      builder: builder,
-      padding: padding,
-      // minHeight: minHeight,
-      minimumSize: minimumSize,
-    );
-  }
-
-  Widget _bodyBuilder(BuildContext context, Widget child) {
-    return Padding(
-      padding: padding,
-      child: ConstrainedBox(
-        constraints: BoxConstraints(
-          minWidth: minimumSize.width,
-          minHeight: minimumSize.height,
-        ),
-        child: Center(
-          child: child,
-        ),
-      ),
-    );
-  }
-
-  static EasyFormSaveButtonBuilder defaultBuilder = _defaultBuilder;
-
-  static Widget _defaultBuilder(BuildContext context, Widget child, VoidCallback onPressed, EasyFormSaveButton button) {
-    return ElevatedButton(
-      key: button.key,
-      child: child,
-      onPressed: onPressed,
-    );
-  }
-
-  static EasyFormSaveButtonIndicatorBuilder defaultIndicatorBuilder = _defaultIndicatorBuilder;
-
-  static Widget _defaultIndicatorBuilder(BuildContext context, EasyFormSaveButton button) {
-    final ThemeData theme = Theme.of(context);
-    final Color color = theme?.colorScheme?.onPrimary;
-    return SizedBox(
-      width: button.minimumSize.height,
-      height: button.minimumSize.height,
-      child: Theme(
-        data: theme.copyWith(
-          accentColor: color,
-        ),
-        child: CircularProgressIndicator.adaptive(
-          strokeWidth: 2,
-        ),
-      ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final form = EasyForm.of(context);
-    return ValueListenableBuilder(
-      valueListenable: form.isSaving,
-      builder: (context, isSaving, _) {
-        final Widget content = isSaving ? (indicator ?? defaultIndicatorBuilder(context, this)) : child;
-        final Widget body = _bodyBuilder(context, content);
-        final Widget button = (builder ?? defaultBuilder)?.call(context, body, form.save, this) ?? const SizedBox();
-        return IgnorePointer(
-          ignoring: isSaving,
-          child: button,
-        );
-      },
-    );
-  }
-}
-*/
