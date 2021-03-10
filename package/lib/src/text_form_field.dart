@@ -5,18 +5,13 @@ import 'custom_form_field.dart';
 
 export 'package:flutter/services.dart' show SmartQuotesType, SmartDashesType;
 
-/// A [FormField] that contains a [TextField].
+/// A [EasyCustomFormField] that contains a [TextField].
 ///
 /// This is a convenience widget that wraps a [TextField] widget in a
-/// [FormField].
-///
-/// A [Form] ancestor is not required. The [Form] simply makes it easier to
-/// save, reset, or validate multiple fields at once. To use without a [Form],
-/// pass a [GlobalKey] to the constructor and use [GlobalKey.currentState] to
-/// save or reset the form field.
+/// [EasyCustomFormField].
 ///
 /// When a [controller] is specified, its [TextEditingController.text]
-/// defines the [initialValue]. If this [FormField] is part of a scrolling
+/// defines the [initialValue]. If this [EasyTextFormField] is part of a scrolling
 /// container that lazily constructs its children, like a [ListView] or a
 /// [CustomScrollView], then a [controller] should be specified.
 /// The controller's lifetime should be managed by a stateful widget ancestor
@@ -35,8 +30,6 @@ export 'package:flutter/services.dart' show SmartQuotesType, SmartDashesType;
 ///
 /// For a documentation about the various parameters, see [TextField].
 ///
-/// {@tool snippet}
-///
 /// Creates a [EasyTextFormField] with an [InputDecoration] and validator function.
 ///
 /// ![If the user enters valid text, the TextField appears normally without any warnings to the user](https://flutter.github.io/assets-for-api-docs/assets/material/text_form_field.png)
@@ -44,74 +37,23 @@ export 'package:flutter/services.dart' show SmartQuotesType, SmartDashesType;
 /// ![If the user enters invalid text, the error message returned from the validator function is displayed in dark red underneath the input](https://flutter.github.io/assets-for-api-docs/assets/material/text_form_field_error.png)
 ///
 /// ```dart
-/// TextFormField(
+/// EasyTextFormField(
+///   name: 'name',
 ///   decoration: const InputDecoration(
 ///     icon: Icon(Icons.person),
 ///     hintText: 'What do people call you?',
 ///     labelText: 'Name *',
 ///   ),
-///   onSaved: (String value) {
-///     // This optional block of code can be used to run
-///     // code when the user saves the form.
-///   },
 ///   validator: (String value) {
 ///     return value.contains('@') ? 'Do not use the @ char.' : null;
 ///   },
 /// )
 /// ```
-/// {@end-tool}
-///
-/// {@tool dartpad --template=stateful_widget_material}
-/// This example shows how to move the focus to the next field when the user
-/// presses the SPACE key.
-///
-/// ```dart imports
-/// import 'package:flutter/services.dart';
-/// ```
-///
-/// ```dart
-/// Widget build(BuildContext context) {
-///   return Material(
-///     child: Center(
-///       child: Shortcuts(
-///         shortcuts: <LogicalKeySet, Intent>{
-///           // Pressing space in the field will now move to the next field.
-///           LogicalKeySet(LogicalKeyboardKey.space): const NextFocusIntent(),
-///         },
-///         child: FocusTraversalGroup(
-///           child: Form(
-///             autovalidateMode: EasyAutovalidateMode.always,
-///             onChanged: () {
-///               Form.of(primaryFocus.context).save();
-///             },
-///             child: Wrap(
-///               children: List<Widget>.generate(5, (int index) {
-///                 return Padding(
-///                   padding: const EdgeInsets.all(8.0),
-///                   child: ConstrainedBox(
-///                     constraints: BoxConstraints.tight(const Size(200, 50)),
-///                     child: TextFormField(
-///                       onSaved: (String value) {
-///                         print('Value for field $index saved as "$value"');
-///                       },
-///                     ),
-///                   ),
-///                 );
-///               }),
-///             ),
-///           ),
-///         ),
-///       ),
-///     ),
-///   );
-/// }
-/// ```
-/// {@end-tool}
 ///
 /// See also:
 ///
 ///  * <https://material.io/design/components/text-fields.html>
-///  * [TextField], which is the underlying text field without the [Form]
+///  * [TextField], which is the underlying text field without the [EasyForm]
 ///    integration.
 ///  * [InputDecorator], which shows the labels and other visual elements that
 ///    surround the actual text editing widget.
@@ -120,8 +62,7 @@ class EasyTextFormField extends EasyCustomFormField<String, TextEditingControlle
   EasyTextFormField({
     Key key,
     @required String name,
-    // TODO: label?
-    this.controller,
+    TextEditingController controller,
     String initialValue,
     FocusNode focusNode,
     InputDecoration decoration = const InputDecoration(),
@@ -230,6 +171,4 @@ class EasyTextFormField extends EasyCustomFormField<String, TextEditingControlle
           enabled: enabled,
           autovalidateMode: autovalidateMode,
         );
-
-  final TextEditingController controller;
 }

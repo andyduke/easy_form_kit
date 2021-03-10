@@ -1,5 +1,4 @@
 import 'package:flutter/widgets.dart';
-
 import 'controller.dart';
 
 abstract class EasyFormGenericField<T> extends StatefulWidget {

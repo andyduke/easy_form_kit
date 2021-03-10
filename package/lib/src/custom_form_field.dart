@@ -1,12 +1,22 @@
 import 'package:flutter/material.dart';
 import 'easy_form.dart';
 
+/// Signature for creating a controller.
 typedef CreateControllerCallback<C, T> = C Function(T value);
+
+/// Signature to recreate a controller from an old controller.
 typedef RecreateControllerCallback<C> = C Function(C oldController);
+
+/// Signature for value getter from controller.
 typedef ValueOfGetter<T, C> = T Function(C controller);
+
+/// Signature for controller value setter.
 typedef ValueOfSetter<T, C> = Function(C controller, T value);
 
+/// Field value change handler signature.
 typedef EasyFormCustomFieldChangeHandler<T> = void Function(T value);
+
+/// Input field builder signature.
 typedef EasyFormCustomFieldBuilder<T, C> = Widget Function(
     _EasyCustomFormFieldState fieldState, EasyFormCustomFieldChangeHandler<T> onChangedHandler);
 
@@ -129,20 +139,21 @@ class EasyCustomFormField<T, C extends ValueNotifier> extends EasyFormField<T> {
   /// A builder that instantiates a controller of type `C` for a value of type `T`.
   ///
   /// Used to create a field on the fly in the widget tree.
-  /// For a widget inheriting from `EasyFormCustomField`, override
+  /// For a widget inheriting from `EasyCustomFormField`, override
   /// the `createController` method instead of using this builder.
   final CreateControllerCallback<C, T> controllerBuilder;
 
   /// A builder that recreates a controller from an old controller,
   /// if not specified, the `controllerBuilder` builder will be used.
   ///
-  /// Useful when using the [TextEditingController.fromValue] constructor.
+  /// Useful when using the [TextEditingController.fromValue] constructor
+  /// to keep the caret position.
   /// ```dart
   /// controllerRebuilder: (oldController) => TextEditingController.fromValue(oldController.value),
   /// ```
   ///
   /// Used to create a field on the fly in the widget tree.
-  /// For a widget inheriting from `EasyFormCustomField`, override
+  /// For a widget inheriting from `EasyCustomFormField`, override
   /// the `recreateController` method instead of using this builder.
   final RecreateControllerCallback<C> controllerRebuilder;
 
