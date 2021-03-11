@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'action_button.dart';
 import '../easy_form.dart';
@@ -54,18 +55,33 @@ class EasyFormResetButton extends EasyFormActionButton {
   @override
   EasyFormActionButtonBuilder get builder => super.builder ?? defaultBuilder;
 
-  /// The default button builder, creates an [ElevatedButton].
+  /// The default button builder, creates an [OutlinedButton]
+  /// or [CupertinoButton].
   ///
   /// You can reassign to your builder globally so that you
   /// don't pass the builder function every time
   /// you create a widget.
   static EasyFormActionButtonBuilder defaultBuilder = _defaultBuilder;
 
-  static Widget _defaultBuilder(BuildContext context, Key key, Widget child, VoidCallback onPressed) {
-    return OutlinedButton(
-      key: key,
-      child: child,
-      onPressed: onPressed,
-    );
+  static Widget _defaultBuilder(
+      BuildContext context, Key key, Widget child, VoidCallback onPressed, EasyFormAdaptivity adaptivity) {
+    switch (adaptivity) {
+      case EasyFormAdaptivity.cupertino:
+        return CupertinoButton(
+          key: key,
+          child: child,
+          onPressed: onPressed,
+          padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 6.0),
+        );
+
+      case EasyFormAdaptivity.auto:
+      case EasyFormAdaptivity.material:
+      default:
+        return OutlinedButton(
+          key: key,
+          child: child,
+          onPressed: onPressed,
+        );
+    }
   }
 }

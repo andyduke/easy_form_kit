@@ -1,9 +1,11 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'action_button.dart';
 import '../easy_form.dart';
 
 ///Signature for the save indicator builder
-typedef EasyFormSaveButtonIndicatorBuilder = Widget Function(BuildContext context, Size size);
+typedef EasyFormSaveButtonIndicatorBuilder = Widget Function(
+    BuildContext context, Size size, EasyFormAdaptivity adaptivity);
 
 /// Signature for button content layout builder
 typedef EasyFormSaveButtonLayoutBuilder = Widget Function(BuildContext context, Widget body, Widget indicator);
@@ -92,12 +94,14 @@ class EasyFormSaveButton extends EasyFormActionButton {
   }
 
   @override
-  Widget bodyBuilder(BuildContext context, Widget child, bool isSaving) {
-    final Widget body = super.bodyBuilder(context, child, isSaving);
+  Widget bodyBuilder(BuildContext context, Widget child, bool isSaving, EasyFormState form) {
+    final Widget body = super.bodyBuilder(context, child, isSaving, form);
     final Widget layout = layoutBuilder(
       context,
       isSaving ? Opacity(child: body, opacity: 0) : body,
-      isSaving ? indicatorBuilder?.call(context, indicatorSize) : SizedBox.fromSize(size: indicatorSize),
+      isSaving
+          ? indicatorBuilder?.call(context, indicatorSize, form.adaptivity)
+          : SizedBox.fromSize(size: indicatorSize),
     );
 
     return layout;
@@ -108,7 +112,7 @@ class EasyFormSaveButton extends EasyFormActionButton {
   @override
   EasyFormActionButtonBuilder get builder => super.builder ?? defaultBuilder;
 
-  /// The default button builder, creates an [ElevatedButton].
+  /// The default button builder, creates an [ElevatedButton] or [CupertinoButton.filled].
   /// You can reassign to your builder globally so that you
   /// don't pass the builder function every time
   /// you create a widget.
@@ -149,13 +153,29 @@ class EasyFormSaveButton extends EasyFormActionButton {
   /// don't pass the builder function every time
   /// you create a widget.
   ///
-  /// By default, this is a [CircularProgressIndicator] with
+  /// By default, this is a [CircularProgressIndicator] or [CupertinoActivityIndicator] with
   /// a size of 18x18 and the color of the text from the [ElevatedButton].
   static EasyFormSaveButtonIndicatorBuilder defaultIndicatorBuilder = _defaultIndicatorBuilder;
 
-  static Widget _defaultIndicatorBuilder(BuildContext context, Size size) {
+  static Widget _defaultIndicatorBuilder(BuildContext context, Size size, EasyFormAdaptivity adaptivity) {
     final ThemeData theme = Theme.of(context);
     final Color color = theme?.colorScheme?.onPrimary;
+
+    Widget indicator;
+    switch (adaptivity) {
+      case EasyFormAdaptivity.cupertino:
+        indicator = CupertinoActivityIndicator();
+        break;
+
+      case EasyFormAdaptivity.auto:
+      case EasyFormAdaptivity.material:
+      default:
+        indicator = CircularProgressIndicator(
+          strokeWidth: 2,
+        );
+        break;
+    }
+
     return SizedBox(
       width: size.width,
       height: size.height,
@@ -163,9 +183,7 @@ class EasyFormSaveButton extends EasyFormActionButton {
         data: theme.copyWith(
           accentColor: color,
         ),
-        child: CircularProgressIndicator.adaptive(
-          strokeWidth: 2,
-        ),
+        child: indicator,
       ),
     );
   }

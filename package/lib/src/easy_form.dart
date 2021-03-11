@@ -1,6 +1,13 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 
+/// Enumeration of the modes of adaptability of form elements
+enum EasyFormAdaptivity {
+  auto,
+  material,
+  cupertino,
+}
+
 /// A container for grouping together multiple form field widgets
 /// (e.g. [TextField] widgets) and handling all of the form field values
 /// in a single callback.
@@ -27,10 +34,10 @@ import 'package:flutter/material.dart';
 /// will be called with the values ​​returned from `onSave`.
 ///
 ///
-/// This example shows a [EasyForm] with two [TextFormField] to enter an
-/// login, password and an [EasyFormSaveButton] to submit the form.
+/// This example shows a [EasyForm] with two [EasyTextFormField] to enter an
+/// username, password and an [EasyFormSaveButton] to submit the form.
 /// The values ​​of the form fields are passed to the hypothetical API client,
-/// the result of the API request is passed to onSaved.
+/// the result of the API request is passed to `onSaved`.
 /// While waiting for the API client to finish, the [EasyFormSaveButton]
 /// displays a [CircularProgressIndicator].
 ///
@@ -39,7 +46,7 @@ import 'package:flutter/material.dart';
 /// Widget build(BuildContext context) {
 ///   return EasyForm(
 ///     onSave: (values) async {
-///       return API.login(values['login'], values['password']);
+///       return API.login(values['username'], values['password']);
 ///     },
 ///     onSaved: (response) {
 ///       if (response.hasError) {
@@ -51,10 +58,10 @@ import 'package:flutter/material.dart';
 ///     child: Column(
 ///       crossAxisAlignment: CrossAxisAlignment.start,
 ///       children: <Widget>[
-///         TextFormField(
-///           name: 'login',
+///         EasyTextFormField(
+///           name: 'username',
 ///           decoration: const InputDecoration(
-///             hintText: 'Enter your login',
+///             hintText: 'Enter your username',
 ///           ),
 ///           validator: (value) {
 ///             if (value.isEmpty) {
@@ -64,7 +71,7 @@ import 'package:flutter/material.dart';
 ///           },
 ///         ),
 ///         const SizedBox(height: 16.0),
-///         TextFormField(
+///         EasyTextFormField(
 ///           name: 'password',
 ///           decoration: const InputDecoration(
 ///             hintText: 'Enter your password',
@@ -101,11 +108,7 @@ class EasyForm extends StatefulWidget {
   const EasyForm({
     Key key,
     @required this.child,
-    // this.saveButtonText,
-    // this.savingButtonIndicator,
-    // this.saveButtonBuilder,
-    // this.saveButton,
-    // this.layoutBuilder,
+    this.adaptivity = EasyFormAdaptivity.auto,
     this.onWillPop,
     this.onChanged,
     this.onSave,
@@ -126,6 +129,11 @@ class EasyForm extends StatefulWidget {
     final _FormScope scope = context.dependOnInheritedWidgetOfExactType<_FormScope>();
     return scope?._formState;
   }
+
+  /// The mode of adaptability of form elements, in which design system
+  /// the form elements will be displayed: Material, Apple, or
+  /// will be automatically determined based on the platform.
+  final EasyFormAdaptivity adaptivity;
 
   /// The widget below this widget in the tree.
   ///
@@ -187,6 +195,8 @@ class EasyForm extends StatefulWidget {
 class EasyFormState extends State<EasyForm> {
   final ValueNotifier<bool> _isSaving = ValueNotifier(false);
 
+  EasyFormAdaptivity _adaptivity;
+
   int _generation = 0;
   bool _hasInteractedByUser = false;
   final Set<EasyFormFieldState<dynamic>> _fields = <EasyFormFieldState<dynamic>>{};
@@ -194,6 +204,43 @@ class EasyFormState extends State<EasyForm> {
   Set<EasyFormFieldState<dynamic>> get fields => _fields;
 
   ValueNotifier<bool> get isSaving => _isSaving;
+
+  /// The mode of adaptability of form elements, in which design system
+  /// the form elements will be displayed: Material, Apple, or
+  /// will be automatically determined based on the platform.
+  // EasyFormAdaptivity get adaptivity => widget?.adaptivity ?? EasyFormAdaptivity.auto;
+  EasyFormAdaptivity get adaptivity => _adaptivity;
+
+  @override
+  void didChangeDependencies() {
+    if (_adaptivity == null) {
+      _adaptivity = widget?.adaptivity ?? EasyFormAdaptivity.auto;
+      if (_adaptivity == EasyFormAdaptivity.auto) {
+        final TargetPlatform platform = Theme.of(context)?.platform ?? TargetPlatform.android;
+        switch (platform) {
+          case TargetPlatform.android:
+          case TargetPlatform.fuchsia:
+            _adaptivity = EasyFormAdaptivity.material;
+            break;
+
+          case TargetPlatform.iOS:
+          case TargetPlatform.macOS:
+            _adaptivity = EasyFormAdaptivity.cupertino;
+            break;
+
+          case TargetPlatform.linux:
+            _adaptivity = EasyFormAdaptivity.material;
+            break;
+
+          case TargetPlatform.windows:
+            _adaptivity = EasyFormAdaptivity.material;
+            break;
+        }
+      }
+    }
+
+    super.didChangeDependencies();
+  }
 
   // Called when a form field has changed. This will cause all form fields
   // to rebuild, useful if form fields have interdependencies.
@@ -257,7 +304,7 @@ class EasyFormState extends State<EasyForm> {
     _isSaving.value = true;
 
     final dynamic data = await widget.onSave?.call(values);
-    widget.onSaved?.call(data);
+    widget.onSaved?.call(data ?? values);
 
     _isSaving.value = false;
 

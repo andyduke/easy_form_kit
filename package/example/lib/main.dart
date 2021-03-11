@@ -171,6 +171,7 @@ class FormExampleScreen extends StatelessWidget {
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 56),
         child: EasyForm(
+          // adaptivity: EasyFormAdaptivity.cupertino,
           key: _formKey,
           // saveButton: EasyFormSaveButton.text('Save'),
           // saveButton: EasyFormButton(child: Text('Save')),
