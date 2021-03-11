@@ -1,5 +1,5 @@
 name: easy_form_kit
-description: Easy data management in the form. 
+description: A set of widgets for processing form field data in one common processor. Convenient for saving data to a database, sending via API, etc.
 version: 1.0.0
 author:
 homepage:
