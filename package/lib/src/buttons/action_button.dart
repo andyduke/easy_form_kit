@@ -77,6 +77,8 @@ class EasyFormActionButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final form = EasyForm.of(context);
+    if (form == null) return const SizedBox();
+
     return ValueListenableBuilder(
       valueListenable: form.isSaving,
       builder: (context, isSaving, _) {
