@@ -85,7 +85,7 @@ class EasyTextFormField
     SmartDashesType smartDashesType,
     SmartQuotesType smartQuotesType,
     bool enableSuggestions = true,
-    bool maxLengthEnforced = true,
+    MaxLengthEnforcement /*?*/ maxLengthEnforcement,
     int maxLines = 1,
     int minLines,
     bool expands = false,
@@ -152,7 +152,7 @@ class EasyTextFormField
                       ? SmartQuotesType.disabled
                       : SmartQuotesType.enabled),
               enableSuggestions: enableSuggestions,
-              maxLengthEnforced: maxLengthEnforced,
+              maxLengthEnforcement: maxLengthEnforcement,
               maxLines: maxLines,
               minLines: minLines,
               expands: expands,
