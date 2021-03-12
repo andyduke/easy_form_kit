@@ -4,10 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 /// Signature for the save indicator builder
-typedef EasyFormSaveIndicatorBuilder = Widget Function(BuildContext context, Size size, EasyFormAdaptivity adaptivity);
+typedef EasyFormSaveIndicatorBuilder = Widget Function(
+    BuildContext context, Size size, EasyFormAdaptivity adaptivity);
 
 /// Signature for the save indicator layout builder
-typedef EasyFormSaveIndicatorLayoutBuilder = Widget Function(BuildContext context, Widget body, [Widget indicator]);
+typedef EasyFormSaveIndicatorLayoutBuilder = Widget
+    Function(BuildContext context, Widget body, [Widget indicator]);
 
 /// Form save indicator builder.
 ///
@@ -72,9 +74,11 @@ class EasyFormSaveIndicator extends StatelessWidget {
   ///
   /// By default, this is a [CircularProgressIndicator] or [CupertinoActivityIndicator] with
   /// a size of 32x32.
-  static EasyFormSaveIndicatorBuilder defaultIndicatorBuilder = _defaultIndicatorBuilder;
+  static EasyFormSaveIndicatorBuilder defaultIndicatorBuilder =
+      _defaultIndicatorBuilder;
 
-  static Widget _defaultIndicatorBuilder(BuildContext context, Size size, EasyFormAdaptivity adaptivity) {
+  static Widget _defaultIndicatorBuilder(
+      BuildContext context, Size size, EasyFormAdaptivity adaptivity) {
     Widget indicator;
 
     switch (adaptivity) {
@@ -105,9 +109,11 @@ class EasyFormSaveIndicator extends StatelessWidget {
   ///
   /// By default, this is a [Stack] with a centered indicator
   /// on top of the child.
-  static EasyFormSaveIndicatorLayoutBuilder defaultLayoutBuilder = _defaultLayoutBuilder;
+  static EasyFormSaveIndicatorLayoutBuilder defaultLayoutBuilder =
+      _defaultLayoutBuilder;
 
-  static Widget _defaultLayoutBuilder(BuildContext context, Widget body, [Widget indicator]) {
+  static Widget _defaultLayoutBuilder(BuildContext context, Widget body,
+      [Widget indicator]) {
     return Stack(
       alignment: Alignment.center,
       children: [
@@ -134,7 +140,8 @@ class EasyFormSaveIndicator extends StatelessWidget {
         final Widget indicator = isSaving
             ? KeyedSubtree(
                 key: ValueKey('save-indicator-overlay'),
-                child: (indicatorBuilder ?? defaultIndicatorBuilder).call(context, indicatorSize, form.adaptivity),
+                child: (indicatorBuilder ?? defaultIndicatorBuilder)
+                    .call(context, indicatorSize, form.adaptivity),
               )
             : null;
         return (layoutBuilder ?? defaultLayoutBuilder).call(
@@ -143,7 +150,8 @@ class EasyFormSaveIndicator extends StatelessWidget {
             key: ValueKey('save-indicator-child'),
             child: IgnorePointer(
               ignoring: isSaving,
-              child: Opacity(opacity: isSaving ? childOpacityOnSave : 1.0, child: body),
+              child: Opacity(
+                  opacity: isSaving ? childOpacityOnSave : 1.0, child: body),
             ),
           ),
           indicator,

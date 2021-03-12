@@ -85,7 +85,8 @@ abstract class EasyFormGenericField<T> extends StatefulWidget {
   }
 
   @override
-  _EasyFormGenericFieldState<T> createState() => _EasyFormGenericFieldState<T>();
+  _EasyFormGenericFieldState<T> createState() =>
+      _EasyFormGenericFieldState<T>();
 }
 
 class _EasyFormGenericFieldState<T> extends State<EasyFormGenericField<T>> {

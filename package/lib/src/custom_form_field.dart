@@ -18,7 +18,8 @@ typedef EasyFormCustomFieldChangeHandler<T> = void Function(T value);
 
 /// Input field builder signature.
 typedef EasyFormCustomFieldBuilder<T, C> = Widget Function(
-    _EasyCustomFormFieldState fieldState, EasyFormCustomFieldChangeHandler<T> onChangedHandler);
+    _EasyCustomFormFieldState fieldState,
+    EasyFormCustomFieldChangeHandler<T> onChangedHandler);
 
 /// An extensible base class for wrapping form fields.
 ///
@@ -112,13 +113,15 @@ class EasyCustomFormField<T, C extends ValueNotifier> extends EasyFormField<T> {
         super(
           key: key,
           name: name,
-          initialValue: controller != null ? controller.value : (initialValue ?? null),
+          initialValue:
+              controller != null ? controller.value : (initialValue ?? null),
           onSaved: onSaved,
           validator: validator,
           enabled: enabled ?? true,
           autovalidateMode: autovalidateMode,
           builder: (EasyFormFieldState<T> field) {
-            final _EasyCustomFormFieldState<T, C> state = field as _EasyCustomFormFieldState<T, C>;
+            final _EasyCustomFormFieldState<T, C> state =
+                field as _EasyCustomFormFieldState<T, C>;
             void onChangedHandler(T value) {
               if (onChanged != null) {
                 onChanged(value);
@@ -197,25 +200,31 @@ class EasyCustomFormField<T, C extends ValueNotifier> extends EasyFormField<T> {
   ///
   /// By default, it calls the `valueGet` callback, if not defined,
   /// it returns the controller's `value` property.
-  T valueOf(C controller) => (valueGet != null) ? valueGet.call(controller) : controller.value;
+  T valueOf(C controller) =>
+      (valueGet != null) ? valueGet.call(controller) : controller.value;
 
   /// Setter, to set the controller value.
   ///
   /// By default, it calls the `valueSet` callback, if not defined,
   /// it sets the `value` property of the controller.
-  setValue(C controller, T value) => (valueSet != null) ? valueSet.call(controller, value) : controller.value = value;
+  setValue(C controller, T value) => (valueSet != null)
+      ? valueSet.call(controller, value)
+      : controller.value = value;
 
   @override
-  _EasyCustomFormFieldState<T, C> createState() => _EasyCustomFormFieldState<T, C>();
+  _EasyCustomFormFieldState<T, C> createState() =>
+      _EasyCustomFormFieldState<T, C>();
 }
 
-class _EasyCustomFormFieldState<T, C extends ValueNotifier> extends EasyFormFieldState<T> {
+class _EasyCustomFormFieldState<T, C extends ValueNotifier>
+    extends EasyFormFieldState<T> {
   C _controller;
 
   C get controller => widget.controller ?? _controller;
 
   @override
-  EasyCustomFormField<T, C> get widget => super.widget as EasyCustomFormField<T, C>;
+  EasyCustomFormField<T, C> get widget =>
+      super.widget as EasyCustomFormField<T, C>;
 
   @override
   void initState() {

@@ -3,11 +3,16 @@ import 'package:flutter/material.dart';
 import '../easy_form.dart';
 
 /// Signature to invoke button action
-typedef EasyFormButtonAction = void Function(BuildContext context, EasyFormState form);
+typedef EasyFormButtonAction = void Function(
+    BuildContext context, EasyFormState form);
 
 /// Signature for building a button directly
 typedef EasyFormActionButtonBuilder = Widget Function(
-    BuildContext context, Key key, Widget child, VoidCallback onPressed, EasyFormAdaptivity adaptivity);
+    BuildContext context,
+    Key key,
+    Widget child,
+    VoidCallback onPressed,
+    EasyFormAdaptivity adaptivity);
 
 /// Base class for [EasyForm] buttons that self-lock on form save.
 ///
@@ -58,7 +63,8 @@ class EasyFormActionButton extends StatelessWidget {
         super(key: key);
 
   @protected
-  Widget bodyBuilder(BuildContext context, Widget child, bool isSaving, EasyFormState form) {
+  Widget bodyBuilder(
+      BuildContext context, Widget child, bool isSaving, EasyFormState form) {
     return Padding(
       padding: padding,
       child: Align(
@@ -83,9 +89,9 @@ class EasyFormActionButton extends StatelessWidget {
       valueListenable: form.isSaving,
       builder: (context, isSaving, _) {
         final Widget body = bodyBuilder(context, child, isSaving, form);
-        final Widget button =
-            (builder ?? defaultBuilder)?.call(context, key, body, () => handleAction(context, form), form.adaptivity) ??
-                const SizedBox();
+        final Widget button = (builder ?? defaultBuilder)?.call(context, key,
+                body, () => handleAction(context, form), form.adaptivity) ??
+            const SizedBox();
         return IgnorePointer(
           ignoring: lockOnSaving ? isSaving : false,
           child: button,
@@ -108,8 +114,8 @@ class EasyFormActionButton extends StatelessWidget {
   /// you create a widget.
   static EasyFormActionButtonBuilder defaultBuilder = _defaultBuilder;
 
-  static Widget _defaultBuilder(
-      BuildContext context, Key key, Widget child, VoidCallback onPressed, EasyFormAdaptivity adaptivity) {
+  static Widget _defaultBuilder(BuildContext context, Key key, Widget child,
+      VoidCallback onPressed, EasyFormAdaptivity adaptivity) {
     switch (adaptivity) {
       case EasyFormAdaptivity.cupertino:
         return CupertinoButton(

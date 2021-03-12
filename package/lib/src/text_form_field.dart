@@ -58,7 +58,8 @@ export 'package:flutter/services.dart' show SmartQuotesType, SmartDashesType;
 ///  * [InputDecorator], which shows the labels and other visual elements that
 ///    surround the actual text editing widget.
 ///  * Learn how to use a [TextEditingController] in one of our [cookbook recipes](https://flutter.dev/docs/cookbook/forms/text-field-changes#2-use-a-texteditingcontroller).
-class EasyTextFormField extends EasyCustomFormField<String, TextEditingController> {
+class EasyTextFormField
+    extends EasyCustomFormField<String, TextEditingController> {
   EasyTextFormField({
     Key key,
     @required String name,
@@ -114,16 +115,19 @@ class EasyTextFormField extends EasyCustomFormField<String, TextEditingControlle
           controller: controller,
           initialValue: initialValue ?? '',
           controllerBuilder: (value) => TextEditingController(text: value),
-          controllerRebuilder: (oldController) => TextEditingController.fromValue(oldController.value),
+          controllerRebuilder: (oldController) =>
+              TextEditingController.fromValue(oldController.value),
           valueGet: (controller) => controller.text,
           valueSet: (controller, value) => controller.text = value,
           builder: (state, onChangedHandler) {
-            final InputDecoration effectiveDecoration =
-                (decoration ?? const InputDecoration()).applyDefaults(Theme.of(state.context).inputDecorationTheme);
+            final InputDecoration effectiveDecoration = (decoration ??
+                    const InputDecoration())
+                .applyDefaults(Theme.of(state.context).inputDecorationTheme);
             return TextField(
               controller: state.controller,
               focusNode: state.focusNode,
-              decoration: effectiveDecoration.copyWith(errorText: state.errorText),
+              decoration:
+                  effectiveDecoration.copyWith(errorText: state.errorText),
               keyboardType: keyboardType,
               textInputAction: textInputAction,
               style: style,
@@ -139,8 +143,14 @@ class EasyTextFormField extends EasyCustomFormField<String, TextEditingControlle
               obscuringCharacter: obscuringCharacter,
               obscureText: obscureText,
               autocorrect: autocorrect,
-              smartDashesType: smartDashesType ?? (obscureText ? SmartDashesType.disabled : SmartDashesType.enabled),
-              smartQuotesType: smartQuotesType ?? (obscureText ? SmartQuotesType.disabled : SmartQuotesType.enabled),
+              smartDashesType: smartDashesType ??
+                  (obscureText
+                      ? SmartDashesType.disabled
+                      : SmartDashesType.enabled),
+              smartQuotesType: smartQuotesType ??
+                  (obscureText
+                      ? SmartQuotesType.disabled
+                      : SmartQuotesType.enabled),
               enableSuggestions: enableSuggestions,
               maxLengthEnforced: maxLengthEnforced,
               maxLines: maxLines,

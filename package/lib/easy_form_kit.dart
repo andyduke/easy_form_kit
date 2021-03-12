@@ -1,4 +1,4 @@
-library easy_form;
+library easy_form_kit;
 
 export 'src/easy_form.dart';
 export 'src/text_form_field.dart';

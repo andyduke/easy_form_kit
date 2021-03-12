@@ -126,7 +126,8 @@ class EasyForm extends StatefulWidget {
   /// form.save();
   /// ```
   static EasyFormState of(BuildContext context) {
-    final _FormScope scope = context.dependOnInheritedWidgetOfExactType<_FormScope>();
+    final _FormScope scope =
+        context.dependOnInheritedWidgetOfExactType<_FormScope>();
     return scope?._formState;
   }
 
@@ -199,7 +200,8 @@ class EasyFormState extends State<EasyForm> {
 
   int _generation = 0;
   bool _hasInteractedByUser = false;
-  final Set<EasyFormFieldState<dynamic>> _fields = <EasyFormFieldState<dynamic>>{};
+  final Set<EasyFormFieldState<dynamic>> _fields =
+      <EasyFormFieldState<dynamic>>{};
 
   Set<EasyFormFieldState<dynamic>> get fields => _fields;
 
@@ -216,7 +218,8 @@ class EasyFormState extends State<EasyForm> {
     if (_adaptivity == null) {
       _adaptivity = widget?.adaptivity ?? EasyFormAdaptivity.auto;
       if (_adaptivity == EasyFormAdaptivity.auto) {
-        final TargetPlatform platform = Theme.of(context)?.platform ?? TargetPlatform.android;
+        final TargetPlatform platform =
+            Theme.of(context)?.platform ?? TargetPlatform.android;
         switch (platform) {
           case TargetPlatform.android:
           case TargetPlatform.fuchsia:
@@ -247,7 +250,8 @@ class EasyFormState extends State<EasyForm> {
   void _fieldDidChange(EasyFormFieldState<dynamic> field) {
     if (widget.onChanged != null) widget.onChanged(field);
 
-    _hasInteractedByUser = _fields.any((EasyFormFieldState<dynamic> field) => field._hasInteractedByUser);
+    _hasInteractedByUser = _fields
+        .any((EasyFormFieldState<dynamic> field) => field._hasInteractedByUser);
     _forceRebuild();
   }
 
@@ -387,7 +391,8 @@ class _FormScope extends InheritedWidget {
 /// A map with all the values of the form fields is passed as a parameter.
 /// All fields [EasyFormField], [EasyFormTextField], etc. have a mandatory
 /// `name` parameter, which is used as the name of the field in the map.
-typedef EasyFormFieldSaveCallback = Future<dynamic> Function(Map<String, dynamic> values);
+typedef EasyFormFieldSaveCallback = Future<dynamic> Function(
+    Map<String, dynamic> values);
 
 /// Signature for saved callback.
 ///
@@ -396,7 +401,8 @@ typedef EasyFormFieldSaveCallback = Future<dynamic> Function(Map<String, dynamic
 typedef EasyFormFieldSavedCallback = void Function(dynamic values);
 
 /// Signature for the callback when the field changes.
-typedef EasyFormChangeCallback = void Function(EasyFormFieldState<dynamic> field);
+typedef EasyFormChangeCallback = void Function(
+    EasyFormFieldState<dynamic> field);
 
 // --- EasyFormField
 

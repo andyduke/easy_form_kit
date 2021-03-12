@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import '../easy_form.dart';
 
 /// Button builder signature
-typedef EasyFormButtonBuilder = Widget Function(BuildContext context, EasyFormState form);
+typedef EasyFormButtonBuilder = Widget Function(
+    BuildContext context, EasyFormState form);
 
 /// Builder widget that passes a link to the [EasyFormState] to the `builder`.
 ///

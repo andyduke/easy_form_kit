@@ -63,8 +63,8 @@ class EasyFormResetButton extends EasyFormActionButton {
   /// you create a widget.
   static EasyFormActionButtonBuilder defaultBuilder = _defaultBuilder;
 
-  static Widget _defaultBuilder(
-      BuildContext context, Key key, Widget child, VoidCallback onPressed, EasyFormAdaptivity adaptivity) {
+  static Widget _defaultBuilder(BuildContext context, Key key, Widget child,
+      VoidCallback onPressed, EasyFormAdaptivity adaptivity) {
     switch (adaptivity) {
       case EasyFormAdaptivity.cupertino:
         return CupertinoButton(

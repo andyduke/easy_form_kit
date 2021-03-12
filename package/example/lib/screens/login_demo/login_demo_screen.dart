@@ -1,5 +1,5 @@
 import 'package:easy_form_example/screens/logged/logged_screen.dart';
-import 'package:easy_form_kit/easy_form.dart';
+import 'package:easy_form_kit/easy_form_kit.dart';
 import 'package:flutter/material.dart';
 
 class LoginDemoScreen extends StatelessWidget {
