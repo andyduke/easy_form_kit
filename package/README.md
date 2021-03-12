@@ -253,6 +253,10 @@ EasyFormSaveButton.defaultIndicatorBuilder = (context, size) => SizedBox.fromSiz
 );
 ```
 
-## EasyFormSaveIndicator
+## Form saving indicator
 
-TODO:
+Saving or submitting form data can take a certain amount of time, during which time a progress indicator can be displayed. If you are not using an `EasyFormSaveButton` button that shows such an indicator, you may want to add such an indicator on top of all or part of the form. The `EasyFormSaveIndicator` widget is used for this.
+
+By default, this is `CircularProgressIndicator` or `CupertinoActivityIndicator` over the `child` of the widget, but you can override the indicator builder, as well as override the layout builder so that the indicator is not placed on top of the child.
+
+The indicator builder and layout builder can be passed to the `EasyFormSaveIndicator` constructor or assigned globally for the entire application (except for `EasyFormSaveIndicator`, with the specified builder in the constructor) via `EasyFormSaveIndicator.defaultIndicatorBuilder` and `EasyFormSaveIndicator.defaultLayoutBuilder`.

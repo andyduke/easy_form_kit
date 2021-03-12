@@ -8,3 +8,4 @@ export 'src/generic_field/field.dart';
 export 'src/buttons/form_button.dart';
 export 'src/buttons/save_button.dart';
 export 'src/buttons/reset_button.dart';
+export 'src/indicators/save_indicator.dart';

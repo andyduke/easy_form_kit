@@ -1,5 +1,6 @@
 import 'package:demo/screens/custom_field/custom_field_screen.dart';
 import 'package:demo/screens/login_demo/login_demo_screen.dart';
+import 'package:demo/screens/save_indicator/save_indicator_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -39,6 +40,11 @@ class StartScreen extends StatelessWidget {
                 _DemoButton(
                   text: 'Custom field',
                   builder: (context) => CustomFieldScreen(),
+                ),
+                const SizedBox(height: 16),
+                _DemoButton(
+                  text: 'Save indicator',
+                  builder: (context) => SaveIndicatorScreen(),
                 ),
               ],
             ),

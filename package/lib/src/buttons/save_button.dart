@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'action_button.dart';
 import '../easy_form.dart';
 
-///Signature for the save indicator builder
+/// Signature for the save indicator builder
 typedef EasyFormSaveButtonIndicatorBuilder = Widget Function(
     BuildContext context, Size size, EasyFormAdaptivity adaptivity);
 
