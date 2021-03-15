@@ -17,7 +17,7 @@ class CustomFieldScreen extends StatelessWidget {
                 return Future.delayed(
                     const Duration(seconds: 1), () => values['color']);
               },
-              onSaved: (newColor) => color.value = newColor,
+              onSaved: (newColor, values) => color.value = newColor,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,

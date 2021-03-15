@@ -18,7 +18,7 @@ class LoginDemoScreen extends StatelessWidget {
                   };
                 });
               },
-              onSaved: (response) {
+              onSaved: (response, values) {
                 if (response['hasError']) {
                   _alert(context, response['error']);
                 } else {

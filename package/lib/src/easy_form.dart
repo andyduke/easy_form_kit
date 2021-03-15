@@ -48,7 +48,7 @@ enum EasyFormAdaptivity {
 ///     onSave: (values) async {
 ///       return API.login(values['username'], values['password']);
 ///     },
-///     onSaved: (response) {
+///     onSaved: (response, values) {
 ///       if (response.hasError) {
 ///         // ... display error
 ///       } else {
@@ -308,7 +308,7 @@ class EasyFormState extends State<EasyForm> {
     _isSaving.value = true;
 
     final dynamic data = await widget.onSave?.call(values);
-    widget.onSaved?.call(data ?? values);
+    widget.onSaved?.call(data ?? values, values);
 
     _isSaving.value = false;
 
@@ -397,8 +397,10 @@ typedef EasyFormFieldSaveCallback = Future<dynamic> Function(
 /// Signature for saved callback.
 ///
 /// Called after the `onSave` callback completes, the result from `onSave`
-/// is passed to `onSaved` as a parameter.
-typedef EasyFormFieldSavedCallback = void Function(dynamic values);
+/// is passed to `onSaved` as the first parameter and the map with all the values
+/// of the form fields is passed as the second parameter.
+typedef EasyFormFieldSavedCallback = void Function(
+    dynamic values, Map<String, dynamic> fieldValues);
 
 /// Signature for the callback when the field changes.
 typedef EasyFormChangeCallback = void Function(
