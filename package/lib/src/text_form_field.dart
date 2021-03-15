@@ -60,6 +60,15 @@ export 'package:flutter/services.dart' show SmartQuotesType, SmartDashesType;
 ///  * Learn how to use a [TextEditingController] in one of our [cookbook recipes](https://flutter.dev/docs/cookbook/forms/text-field-changes#2-use-a-texteditingcontroller).
 class EasyTextFormField
     extends EasyCustomFormField<String, TextEditingController> {
+  /// Creates a [EasyCustomFormField] that contains a [TextField].
+  ///
+  /// When a [controller] is specified, [initialValue] must be null (the
+  /// default). If [controller] is null, then a [TextEditingController]
+  /// will be constructed automatically and its `text` will be initialized
+  /// to [initialValue] or the empty string.
+  ///
+  /// For documentation about the various parameters, see the [TextField] class
+  /// and [new TextField], the constructor.
   EasyTextFormField({
     Key key,
     @required String name,
@@ -175,6 +184,41 @@ class EasyTextFormField
               autofillHints: autofillHints,
             );
           },
+          onChanged: onChanged,
+          onSaved: onSaved,
+          validator: validator,
+          enabled: enabled,
+          autovalidateMode: autovalidateMode,
+        );
+
+  /// Creates [EasyCustomFormField], which builds [TextField] using a builder.
+  ///
+  /// See also:
+  ///
+  ///  * [EasyTextFormField], default constructor.
+  ///
+  EasyTextFormField.builder({
+    Key key,
+    @required String name,
+    @required EasyFormCustomFieldBuilder<String, TextEditingController> builder,
+    TextEditingController controller,
+    String initialValue,
+    ValueChanged<String> onChanged,
+    FormFieldSetter<String> onSaved,
+    FormFieldValidator<String> validator,
+    bool enabled,
+    EasyAutovalidateMode autovalidateMode = EasyAutovalidateMode.disabled,
+  }) : super(
+          key: key,
+          name: name,
+          controller: controller,
+          initialValue: initialValue ?? '',
+          controllerBuilder: (value) => TextEditingController(text: value),
+          controllerRebuilder: (oldController) =>
+              TextEditingController.fromValue(oldController.value),
+          valueGet: (controller) => controller.text,
+          valueSet: (controller, value) => controller.text = value,
+          builder: builder,
           onChanged: onChanged,
           onSaved: onSaved,
           validator: validator,
