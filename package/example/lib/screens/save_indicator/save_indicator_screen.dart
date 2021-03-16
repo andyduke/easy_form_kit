@@ -27,7 +27,7 @@ class SaveIndicatorScreen extends StatelessWidget {
                       decoration: const InputDecoration(
                         hintText: 'Enter your username',
                       ),
-                      validator: (value) {
+                      validator: (value, [values]) {
                         if (value.isEmpty) {
                           return 'Please enter some text';
                         }
@@ -42,7 +42,7 @@ class SaveIndicatorScreen extends StatelessWidget {
                         hintText: 'Enter your password',
                       ),
                       obscureText: true,
-                      validator: (value) {
+                      validator: (value, [values]) {
                         if (value.isEmpty) {
                           return 'Please enter some text';
                         }

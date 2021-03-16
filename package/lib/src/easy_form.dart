@@ -294,6 +294,17 @@ class EasyFormState extends State<EasyForm> {
     );
   }
 
+  /// Returns the values of form fields as a Map<String, dynamic>
+  Map<String, dynamic> values() {
+    final Map<String, dynamic> values = {};
+
+    for (final EasyFormFieldState<dynamic> field in _fields) {
+      values[field.name] = field.value;
+    }
+
+    return values;
+  }
+
   /// Validate & saves every [EasyFormField] that is a descendant of this [EasyForm].
   Future<bool> save() async {
     if (!validate()) return false;
@@ -353,9 +364,10 @@ class EasyFormState extends State<EasyForm> {
   }
 
   EasyFormFieldState<dynamic> _validate() {
+    final _values = values();
     EasyFormFieldState<dynamic> errorField;
     for (final EasyFormFieldState<dynamic> field in _fields) {
-      if (!field.validate() && (errorField == null)) {
+      if (!field.validate(_values) && (errorField == null)) {
         errorField = field;
       }
     }
@@ -414,7 +426,8 @@ typedef EasyFormChangeCallback = void Function(
 /// otherwise.
 ///
 /// Used by [EasyFormField.validator].
-typedef EasyFormFieldValidator<T> = String Function(T value);
+typedef EasyFormFieldValidator<T> = String Function(T value,
+    [Map<String, dynamic> values]);
 
 /// Signature for being notified when a form field changes value.
 ///
@@ -614,15 +627,19 @@ class EasyFormFieldState<T> extends State<EasyFormField<T>> {
   ///
   ///  * [isValid], which passively gets the validity without setting
   ///    [errorText] or [hasError].
-  bool validate() {
+  bool validate([Map<String, dynamic> values]) {
     setState(() {
-      _validate();
+      _validate(values);
     });
     return !hasError;
   }
 
-  void _validate() {
-    if (widget.validator != null) _errorText = widget.validator(_value);
+  void _validate([Map<String, dynamic> values]) {
+    if (values == null) {
+      values = EasyForm.of(context).values();
+    }
+
+    if (widget.validator != null) _errorText = widget.validator(_value, values);
   }
 
   /// Updates this field's state to the new value. Useful for responding to

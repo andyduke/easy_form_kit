@@ -104,7 +104,7 @@ class EasyTextFormField
     VoidCallback onEditingComplete,
     ValueChanged<String> onFieldSubmitted,
     FormFieldSetter<String> onSaved,
-    FormFieldValidator<String> validator,
+    EasyFormFieldValidator<String> validator,
     List<TextInputFormatter> inputFormatters,
     bool enabled,
     double cursorWidth = 2.0,
