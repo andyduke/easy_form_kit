@@ -205,7 +205,7 @@ class EasyTextFormField
     String initialValue,
     ValueChanged<String> onChanged,
     FormFieldSetter<String> onSaved,
-    FormFieldValidator<String> validator,
+    EasyFormFieldValidator<String> validator,
     bool enabled,
     EasyAutovalidateMode autovalidateMode = EasyAutovalidateMode.disabled,
   }) : super(
