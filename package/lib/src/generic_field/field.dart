@@ -75,7 +75,10 @@ abstract class EasyFormGenericField<T> extends StatefulWidget {
   })  : assert(controller != null),
         super(key: key);
 
-  Widget build(BuildContext context);
+  Widget build(BuildContext context) {
+    throw UnimplementedError(
+        'The EasyFormGenericField.build method is not implemented.');
+  }
 
   T get value => controller.value;
 
@@ -85,11 +88,10 @@ abstract class EasyFormGenericField<T> extends StatefulWidget {
   }
 
   @override
-  _EasyFormGenericFieldState<T> createState() =>
-      _EasyFormGenericFieldState<T>();
+  EasyFormGenericFieldState<T> createState() => EasyFormGenericFieldState<T>();
 }
 
-class _EasyFormGenericFieldState<T> extends State<EasyFormGenericField<T>> {
+class EasyFormGenericFieldState<T> extends State<EasyFormGenericField<T>> {
   @override
   void initState() {
     widget.controller.addListener(_update);

@@ -1,27 +1,8 @@
-# EasyForm Example
-
-```dart
 import 'package:flutter/material.dart';
 import 'package:easy_form_kit/easy_form_kit.dart';
+import 'package:easy_form_example/advanced_example/screens/logged/logged_screen.dart';
 
-void main() {
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'EasyForm Example',
-      theme: ThemeData(
-        primarySwatch: Colors.teal,
-      ),
-      home: ExampleScreen(),
-    );
-  }
-}
-
-class ExampleScreen extends StatelessWidget {
+class LoginDemoScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -80,7 +61,16 @@ class ExampleScreen extends StatelessWidget {
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 24.0),
-                    child: EasyFormSaveButton.text('Sign In'),
+                    child: Row(
+                      children: [
+                        EasyFormSaveButton.text('Sign In'),
+                        const SizedBox(width: 24),
+                        TextButton(
+                          child: Text('Back'),
+                          onPressed: () => Navigator.of(context).pop(),
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
@@ -101,29 +91,3 @@ class ExampleScreen extends StatelessWidget {
     );
   }
 }
-
-class LoggedScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text('Welcome, John.'),
-              const SizedBox(height: 24),
-              TextButton(
-                child: Text('Back'),
-                onPressed: () => Navigator.of(context).pop(),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-```
-
-See more examples in the `example/lib/advanced_example` folder.

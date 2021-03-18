@@ -1,6 +1,6 @@
-import 'package:easy_form_example/screens/custom_field/custom_field_screen.dart';
-import 'package:easy_form_example/screens/login_demo/login_demo_screen.dart';
-import 'package:easy_form_example/screens/save_indicator/save_indicator_screen.dart';
+import 'package:easy_form_example/advanced_example/screens/custom_field/custom_field_screen.dart';
+import 'package:easy_form_example/advanced_example/screens/login_demo/login_demo_screen.dart';
+import 'package:easy_form_example/advanced_example/screens/save_indicator/save_indicator_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() {

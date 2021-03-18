@@ -1,6 +1,6 @@
 # EasyForm
 
-A set of widgets for processing form field data in one common processor. Convenient for saving data to a database, sending via API, etc.
+A set of widgets for processing form field data in one common handler. Convenient for saving data to a database, sending via API, etc.
 
 `EasyForm` and `EasyTextFormField` widgets are similar to and closely compatible with Flutter's `Form` and `TextFormField` widgets.
 

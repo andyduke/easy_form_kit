@@ -1,8 +1,24 @@
-import 'package:easy_form_example/screens/logged/logged_screen.dart';
-import 'package:easy_form_kit/easy_form_kit.dart';
 import 'package:flutter/material.dart';
+import 'package:easy_form_kit/easy_form_kit.dart';
 
-class LoginDemoScreen extends StatelessWidget {
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'EasyForm Example',
+      theme: ThemeData(
+        primarySwatch: Colors.teal,
+      ),
+      home: ExampleScreen(),
+    );
+  }
+}
+
+class ExampleScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -61,16 +77,7 @@ class LoginDemoScreen extends StatelessWidget {
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 24.0),
-                    child: Row(
-                      children: [
-                        EasyFormSaveButton.text('Sign In'),
-                        const SizedBox(width: 24),
-                        TextButton(
-                          child: Text('Back'),
-                          onPressed: () => Navigator.of(context).pop(),
-                        ),
-                      ],
-                    ),
+                    child: EasyFormSaveButton.text('Sign In'),
                   ),
                 ],
               ),
@@ -87,6 +94,29 @@ class LoginDemoScreen extends StatelessWidget {
       builder: (context) => AlertDialog(
         title: Text('Error'),
         content: Text(text),
+      ),
+    );
+  }
+}
+
+class LoggedScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: SafeArea(
+        child: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text('Welcome, John.'),
+              const SizedBox(height: 24),
+              TextButton(
+                child: Text('Back'),
+                onPressed: () => Navigator.of(context).pop(),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
