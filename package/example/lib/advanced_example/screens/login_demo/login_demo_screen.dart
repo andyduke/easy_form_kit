@@ -35,6 +35,7 @@ class LoginDemoScreen extends StatelessWidget {
                 children: <Widget>[
                   EasyTextFormField(
                     name: 'username',
+                    saveOnSubmit: true,
                     decoration: const InputDecoration(
                       hintText: 'Enter your username',
                     ),
@@ -48,6 +49,7 @@ class LoginDemoScreen extends StatelessWidget {
                   const SizedBox(height: 16.0),
                   EasyTextFormField(
                     name: 'password',
+                    saveOnSubmit: true,
                     decoration: const InputDecoration(
                       hintText: 'Enter your password',
                     ),

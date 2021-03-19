@@ -1,3 +1,8 @@
+## 1.0.7
+
+* The `saveOnSubmit` argument has been added to `EasyTextFormField`, which, when true, the form is saved by pressing *submit* on the keyboard.
+* A `saveForm` method has been added to `EasyFormFieldState` to save the form.
+
 ## 1.0.6
 
 * Added exception handling in `onSave` and `onSaved` callbacks.

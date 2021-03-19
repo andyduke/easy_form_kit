@@ -605,6 +605,11 @@ class EasyFormFieldState<T> extends State<EasyFormField<T>> {
     if (widget.onSaved != null) widget.onSaved(value);
   }
 
+  /// Validate & saves form.
+  Future<bool> saveForm() async {
+    return EasyForm.of(context)?.save() ?? false;
+  }
+
   @mustCallSuper
   @protected
   void resetValue() {

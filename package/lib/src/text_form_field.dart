@@ -118,6 +118,7 @@ class EasyTextFormField
     ScrollPhysics scrollPhysics,
     Iterable<String> autofillHints,
     EasyAutovalidateMode autovalidateMode = EasyAutovalidateMode.disabled,
+    bool saveOnSubmit = false,
   }) : super(
           key: key,
           name: name,
@@ -169,7 +170,10 @@ class EasyTextFormField
               onChanged: onChangedHandler,
               onTap: onTap,
               onEditingComplete: onEditingComplete,
-              onSubmitted: onFieldSubmitted,
+              onSubmitted: (value) {
+                onFieldSubmitted?.call(value);
+                if (saveOnSubmit) state.saveForm();
+              },
               inputFormatters: inputFormatters,
               enabled: enabled ?? decoration?.enabled ?? true,
               cursorWidth: cursorWidth,
