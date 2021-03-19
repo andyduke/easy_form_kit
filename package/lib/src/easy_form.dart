@@ -317,11 +317,12 @@ class EasyFormState extends State<EasyForm> {
     }
 
     _isSaving.value = true;
-
-    final dynamic data = await widget.onSave?.call(values);
-    widget.onSaved?.call(data ?? values, values);
-
-    _isSaving.value = false;
+    try {
+      final dynamic data = await widget.onSave?.call(values);
+      widget.onSaved?.call(data ?? values, values);
+    } finally {
+      _isSaving.value = false;
+    }
 
     return true;
   }

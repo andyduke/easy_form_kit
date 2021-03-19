@@ -1,3 +1,7 @@
+## 1.0.6
+
+* Added exception handling in `onSave` and `onSaved` callbacks.
+
 ## 1.0.5
 
 * The `build` method of the `EasyFormGenericField` widget now has a default implementation that throws a `UnimplementedError`. Now it is not necessary to implement this method if the class inherited from `EasyFormGenericFieldState` has its own implementation of the `build` method.
