@@ -13,7 +13,7 @@ class SaveIndicatorScreen extends StatelessWidget {
               onSave: (values) async {
                 return Future.delayed(const Duration(seconds: 3), () => true);
               },
-              onSaved: (response, values) {
+              onSaved: (response, values, form) {
                 _alert(context, 'Saved');
               },
               child: EasyFormSaveIndicator(
