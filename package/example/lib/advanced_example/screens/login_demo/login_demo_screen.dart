@@ -11,7 +11,7 @@ class LoginDemoScreen extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
             child: EasyForm(
-              onSave: (values) async {
+              onSave: (values, form) async {
                 return Future.delayed(const Duration(seconds: 3), () {
                   return <String, dynamic>{
                     'hasError': false,

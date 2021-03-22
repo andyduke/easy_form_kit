@@ -21,7 +21,7 @@ displays a `CircularProgressIndicator`.
 @override
 Widget build(BuildContext context) {
   return EasyForm(
-    onSave: (values) async {
+    onSave: (values, form) async {
       return API.login(values['username'], values['password']);
     },
     onSaved: (response, values, form) {

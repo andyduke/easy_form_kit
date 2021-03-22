@@ -45,7 +45,7 @@ enum EasyFormAdaptivity {
 /// @override
 /// Widget build(BuildContext context) {
 ///   return EasyForm(
-///     onSave: (values) async {
+///     onSave: (values, form) async {
 ///       return API.login(values['username'], values['password']);
 ///     },
 ///     onSaved: (response, values, form) {
@@ -318,7 +318,7 @@ class EasyFormState extends State<EasyForm> {
 
     _isSaving.value = true;
     try {
-      final dynamic data = await widget.onSave?.call(values);
+      final dynamic data = await widget.onSave?.call(values, this);
       widget.onSaved?.call(data ?? values, values, this);
     } finally {
       _isSaving.value = false;
@@ -405,7 +405,7 @@ class _FormScope extends InheritedWidget {
 /// All fields [EasyFormField], [EasyFormTextField], etc. have a mandatory
 /// `name` parameter, which is used as the name of the field in the map.
 typedef EasyFormFieldSaveCallback = Future<dynamic> Function(
-    Map<String, dynamic> values);
+    Map<String, dynamic> values, EasyFormState form);
 
 /// Signature for saved callback.
 ///

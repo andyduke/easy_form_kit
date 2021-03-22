@@ -11,7 +11,7 @@ class SaveErrorScreen extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
             child: EasyForm(
-              onSave: (values) async {
+              onSave: (values, form) async {
                 await Future.delayed(const Duration(seconds: 1));
                 throw UnimplementedError('Unimplemented');
               },
