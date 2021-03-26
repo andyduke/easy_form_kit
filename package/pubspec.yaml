@@ -1,13 +1,13 @@
 name: easy_form_kit
 description: A set of widgets for processing form field data in one common handler. Convenient for saving data to a database, sending via API, etc.
-version: 1.0.9
+version: 2.0.0-nullsafety.0
 author: Andy Chentsov <chentsov@gmail.com>
 homepage: https://github.com/andyduke/easy_form_kit/tree/master/package
 repository: https://github.com/andyduke/easy_form_kit
 issue_tracker: https://github.com/andyduke/easy_form_kit/issues
 
 environment:
-  sdk: ">=2.7.0 <3.0.0"
+  sdk: '>=2.12.0 <3.0.0'
   flutter: ">=1.17.0"
 
 dependencies:

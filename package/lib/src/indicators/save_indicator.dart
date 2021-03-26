@@ -9,7 +9,7 @@ typedef EasyFormSaveIndicatorBuilder = Widget Function(
 
 /// Signature for the save indicator layout builder
 typedef EasyFormSaveIndicatorLayoutBuilder = Widget
-    Function(BuildContext context, Widget body, [Widget indicator]);
+    Function(BuildContext context, Widget body, [Widget? indicator]);
 
 /// Form save indicator builder.
 ///
@@ -47,24 +47,23 @@ class EasyFormSaveIndicator extends StatelessWidget {
 
   /// The builder of the indicator on top of a child, displayed
   /// during the save process.
-  final EasyFormSaveIndicatorBuilder indicatorBuilder;
+  final EasyFormSaveIndicatorBuilder? indicatorBuilder;
 
   /// Indicator size
   final Size indicatorSize;
 
   /// Indicator layout builder
-  final EasyFormSaveIndicatorLayoutBuilder layoutBuilder;
+  final EasyFormSaveIndicatorLayoutBuilder? layoutBuilder;
 
   /// Creates a form save indicator widget.
   const EasyFormSaveIndicator({
-    Key key,
-    @required this.child,
+    Key? key,
+    required this.child,
     this.childOpacityOnSave = kChildOpacityOnSave,
     this.indicatorBuilder,
     this.indicatorSize = kIndicatorSize,
     this.layoutBuilder,
-  })  : assert(child != null),
-        super(key: key);
+  }) : super(key: key);
 
   /// Default constructor for indicator on save.
   ///
@@ -113,7 +112,7 @@ class EasyFormSaveIndicator extends StatelessWidget {
       _defaultLayoutBuilder;
 
   static Widget _defaultLayoutBuilder(BuildContext context, Widget body,
-      [Widget indicator]) {
+      [Widget? indicator]) {
     return Stack(
       alignment: Alignment.center,
       children: [
@@ -130,14 +129,14 @@ class EasyFormSaveIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final EasyFormState form = EasyForm.of(context);
+    final EasyFormState? form = EasyForm.of(context);
     if (form == null) return child;
 
-    return ValueListenableBuilder(
+    return ValueListenableBuilder<bool>(
       valueListenable: form.isSaving,
       child: child,
       builder: (context, isSaving, body) {
-        final Widget indicator = isSaving
+        final Widget? indicator = isSaving
             ? KeyedSubtree(
                 key: ValueKey('save-indicator-overlay'),
                 child: (indicatorBuilder ?? defaultIndicatorBuilder)

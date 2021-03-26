@@ -86,7 +86,8 @@ typedef EasyFormCustomFieldBuilder<T, C> = Widget Function(
 ///  * [TextField], which is the underlying text field without the [Form]
 ///    integration.
 ///  * Learn how to use a [Controller] in one of our [cookbook recipes](https://flutter.dev/docs/cookbook/forms/text-field-changes#2-use-a-texteditingcontroller).
-class EasyCustomFormField<T, C extends ValueNotifier> extends EasyFormField<T> {
+class EasyCustomFormField<T, C extends ValueNotifier?>
+    extends EasyFormField<T?> {
   /// Creates a [EasyCustomFormField] that contains a custom field.
   ///
   /// When a [controller] is specified, [initialValue] must be null (the
@@ -95,19 +96,19 @@ class EasyCustomFormField<T, C extends ValueNotifier> extends EasyFormField<T> {
   /// to [initialValue] or the empty value.
   ///
   EasyCustomFormField({
-    Key key,
-    @required String name,
+    Key? key,
+    required String name,
     this.controller,
-    T initialValue,
-    @required this.controllerBuilder,
+    T? initialValue,
+    required this.controllerBuilder,
     this.controllerRebuilder,
     this.valueGet,
     this.valueSet,
-    @required EasyFormCustomFieldBuilder<T, C> builder,
-    ValueChanged<T> onChanged,
-    FormFieldSetter<T> onSaved,
-    FormFieldValidator<T> validator,
-    bool enabled,
+    required EasyFormCustomFieldBuilder<T, C> builder,
+    ValueChanged<T>? onChanged,
+    FormFieldSetter<T>? onSaved,
+    EasyFormFieldValidator<T?>? validator,
+    bool enabled = true,
     EasyAutovalidateMode autovalidateMode = EasyAutovalidateMode.disabled,
   })  : assert(initialValue == null || controller == null),
         super(
@@ -117,9 +118,9 @@ class EasyCustomFormField<T, C extends ValueNotifier> extends EasyFormField<T> {
               controller != null ? controller.value : (initialValue ?? null),
           onSaved: onSaved,
           validator: validator,
-          enabled: enabled ?? true,
+          enabled: enabled,
           autovalidateMode: autovalidateMode,
-          builder: (EasyFormFieldState<T> field) {
+          builder: (EasyFormFieldState<T?> field) {
             final _EasyCustomFormFieldState<T, C> state =
                 field as _EasyCustomFormFieldState<T, C>;
             void onChangedHandler(T value) {
@@ -137,14 +138,14 @@ class EasyCustomFormField<T, C extends ValueNotifier> extends EasyFormField<T> {
   ///
   /// If null, this widget will create its own [Controller] and
   /// initialize its [Controller.value] with [initialValue].
-  final C controller;
+  final C? controller;
 
   /// A builder that instantiates a controller of type `C` for a value of type `T`.
   ///
   /// Used to create a field on the fly in the widget tree.
   /// For a widget inheriting from `EasyCustomFormField`, override
   /// the `createController` method instead of using this builder.
-  final CreateControllerCallback<C, T> controllerBuilder;
+  final CreateControllerCallback<C, T?> controllerBuilder;
 
   /// A builder that recreates a controller from an old controller,
   /// if not specified, the `controllerBuilder` builder will be used.
@@ -158,7 +159,7 @@ class EasyCustomFormField<T, C extends ValueNotifier> extends EasyFormField<T> {
   /// Used to create a field on the fly in the widget tree.
   /// For a widget inheriting from `EasyCustomFormField`, override
   /// the `recreateController` method instead of using this builder.
-  final RecreateControllerCallback<C> controllerRebuilder;
+  final RecreateControllerCallback<C>? controllerRebuilder;
 
   /// Callback to get the value from the controller, if not set
   /// then the controller's `value` property is used.
@@ -168,7 +169,7 @@ class EasyCustomFormField<T, C extends ValueNotifier> extends EasyFormField<T> {
   /// ```dart
   /// valueGet: (controller) => controller.text,
   /// ```
-  final ValueOfGetter<T, C> valueGet;
+  final ValueOfGetter<T, C>? valueGet;
 
   /// Callback to set controller value, if not set - controller's
   /// `value` property is used.
@@ -178,53 +179,56 @@ class EasyCustomFormField<T, C extends ValueNotifier> extends EasyFormField<T> {
   /// ```dart
   /// valueSet: (controller, newText) => controller.text = newText,
   /// ```
-  final ValueOfSetter<T, C> valueSet;
+  final ValueOfSetter<T, C>? valueSet;
 
   /// A builder that instantiates a controller of type `C` for
   /// a value of type `T`.
   ///
   /// Calls the `controllerBuilder` callback by default.
   /// Can be overridden in a descendant for custom implementation.
-  C createController(T value) => controllerBuilder?.call(value);
+  C? createController(T value) => controllerBuilder(value);
 
   /// A builder that recreates a controller from an old controller.
   ///
   /// By default, it calls the `controllerRebuilder` callback or,
   /// if not defined, it calls the `controllerBuilder`.
   /// Can be overridden in a descendant for custom implementation.
-  C recreateController(C oldController) => (controllerRebuilder != null)
-      ? controllerRebuilder.call(oldController)
-      : controllerBuilder?.call(oldController.value);
+  C? recreateController(C oldController) =>
+      controllerRebuilder?.call(oldController) ??
+      controllerBuilder(oldController?.value);
 
   /// Getter, to get the value from the controller.
   ///
   /// By default, it calls the `valueGet` callback, if not defined,
   /// it returns the controller's `value` property.
-  T valueOf(C controller) =>
-      (valueGet != null) ? valueGet.call(controller) : controller.value;
+  T? valueOf(C controller) => valueGet?.call(controller) ?? controller?.value;
 
   /// Setter, to set the controller value.
   ///
   /// By default, it calls the `valueSet` callback, if not defined,
   /// it sets the `value` property of the controller.
-  setValue(C controller, T value) => (valueSet != null)
-      ? valueSet.call(controller, value)
-      : controller.value = value;
+  setValue(C controller, T value) {
+    if (valueSet != null) {
+      valueSet!.call(controller, value);
+    } else {
+      controller?.value = value;
+    }
+  }
 
   @override
   _EasyCustomFormFieldState<T, C> createState() =>
       _EasyCustomFormFieldState<T, C>();
 }
 
-class _EasyCustomFormFieldState<T, C extends ValueNotifier>
-    extends EasyFormFieldState<T> {
-  C _controller;
+class _EasyCustomFormFieldState<T, C extends ValueNotifier?>
+    extends EasyFormFieldState<T?> {
+  C? _controller;
 
-  C get controller => widget.controller ?? _controller;
+  C? get controller => widget.controller ?? _controller;
 
   @override
-  EasyCustomFormField<T, C> get widget =>
-      super.widget as EasyCustomFormField<T, C>;
+  EasyCustomFormField<T?, C?> get widget =>
+      super.widget as EasyCustomFormField<T?, C>;
 
   @override
   void initState() {
@@ -232,12 +236,12 @@ class _EasyCustomFormFieldState<T, C extends ValueNotifier>
     if (widget.controller == null) {
       _controller = widget.createController(widget.initialValue);
     } else {
-      widget.controller.addListener(_handleControllerChanged);
+      widget.controller!.addListener(_handleControllerChanged);
     }
   }
 
   @override
-  void didUpdateWidget(EasyCustomFormField<T, C> oldWidget) {
+  void didUpdateWidget(EasyCustomFormField<T?, C> oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.controller != oldWidget.controller) {
       oldWidget.controller?.removeListener(_handleControllerChanged);
@@ -259,10 +263,10 @@ class _EasyCustomFormFieldState<T, C extends ValueNotifier>
   }
 
   @override
-  void didChange(T value) {
+  void didChange(T? value) {
     super.didChange(value);
 
-    final T oldValue = widget.valueOf(controller);
+    final T? oldValue = widget.valueOf(controller);
     if (oldValue != value) widget.setValue(controller, value);
   }
 
@@ -280,7 +284,7 @@ class _EasyCustomFormFieldState<T, C extends ValueNotifier>
     // notifications for changes originating from within this class -- for
     // example, the reset() method. In such cases, the FormField value will
     // already have been set.
-    final T oldValue = widget.valueOf(controller);
+    final T? oldValue = widget.valueOf(controller);
     if (oldValue != value) didChange(oldValue);
   }
 }

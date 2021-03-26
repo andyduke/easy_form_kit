@@ -21,18 +21,18 @@ import 'package:flutter/foundation.dart';
 /// See also:
 ///
 ///  * [EasyFormGenericField] for a usage example.
-class EasyFormFieldController<T> extends ValueNotifier<T> {
-  T _value;
+class EasyFormFieldController<T> extends ValueNotifier<T?> {
+  T? _value;
 
-  EasyFormFieldController(T value)
+  EasyFormFieldController(T? value)
       : _value = value,
         super(value);
 
-  EasyFormFieldController.fromValue(T value) : super(value ?? null);
+  EasyFormFieldController.fromValue(T? value) : super(value ?? null);
 
-  T get value => _value;
+  T? get value => _value;
 
-  set value(T newValue) {
+  set value(T? newValue) {
     _value = newValue;
     notifyListeners();
   }

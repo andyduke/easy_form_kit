@@ -9,7 +9,7 @@ typedef EasyFormButtonAction = void Function(
 /// Signature for building a button directly
 typedef EasyFormActionButtonBuilder = Widget Function(
     BuildContext context,
-    Key key,
+    Key? key,
     Widget child,
     VoidCallback onPressed,
     EasyFormAdaptivity adaptivity);
@@ -35,7 +35,7 @@ class EasyFormActionButton extends StatelessWidget {
   final Widget child;
 
   /// The action when the button is pressed.
-  final EasyFormButtonAction action;
+  final EasyFormButtonAction? action;
 
   /// Padding inside a button.
   final EdgeInsetsGeometry padding;
@@ -46,20 +46,18 @@ class EasyFormActionButton extends StatelessWidget {
   /// Whether to lock button press on form save.
   final bool lockOnSaving;
 
-  final EasyFormActionButtonBuilder _builder;
+  final EasyFormActionButtonBuilder? _builder;
 
   /// Creates a widget that creates a form button.
   const EasyFormActionButton({
-    Key key,
-    @required this.child,
+    Key? key,
+    required this.child,
     this.action,
-    EasyFormActionButtonBuilder builder,
+    EasyFormActionButtonBuilder? builder,
     this.padding = kPadding,
     this.alignment = Alignment.center,
     this.lockOnSaving = true,
-  })  : assert(child != null),
-        assert(lockOnSaving != null),
-        _builder = builder,
+  })  : _builder = builder,
         super(key: key);
 
   @protected
@@ -85,13 +83,12 @@ class EasyFormActionButton extends StatelessWidget {
     final form = EasyForm.of(context);
     if (form == null) return const SizedBox();
 
-    return ValueListenableBuilder(
+    return ValueListenableBuilder<bool>(
       valueListenable: form.isSaving,
       builder: (context, isSaving, _) {
         final Widget body = bodyBuilder(context, child, isSaving, form);
-        final Widget button = (builder ?? defaultBuilder)?.call(context, key,
-                body, () => handleAction(context, form), form.adaptivity) ??
-            const SizedBox();
+        final Widget button = (builder ?? defaultBuilder).call(context, key,
+            body, () => handleAction(context, form), form.adaptivity);
         return IgnorePointer(
           ignoring: lockOnSaving ? isSaving : false,
           child: button,
@@ -104,7 +101,7 @@ class EasyFormActionButton extends StatelessWidget {
 
   /// Returns the button builder.
   @protected
-  EasyFormActionButtonBuilder get builder => _builder;
+  EasyFormActionButtonBuilder? get builder => _builder;
 
   /// The default button builder, creates an [ElevatedButton]
   /// or [CupertinoButton.filled].
@@ -114,7 +111,7 @@ class EasyFormActionButton extends StatelessWidget {
   /// you create a widget.
   static EasyFormActionButtonBuilder defaultBuilder = _defaultBuilder;
 
-  static Widget _defaultBuilder(BuildContext context, Key key, Widget child,
+  static Widget _defaultBuilder(BuildContext context, Key? key, Widget child,
       VoidCallback onPressed, EasyFormAdaptivity adaptivity) {
     switch (adaptivity) {
       case EasyFormAdaptivity.cupertino:

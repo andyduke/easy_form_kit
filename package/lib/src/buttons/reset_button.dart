@@ -17,9 +17,9 @@ import '../easy_form.dart';
 class EasyFormResetButton extends EasyFormActionButton {
   /// Creates a widget that creates a form reset button.
   const EasyFormResetButton({
-    Key key,
-    @required Widget child,
-    EasyFormActionButtonBuilder builder,
+    Key? key,
+    required Widget child,
+    EasyFormActionButtonBuilder? builder,
     EdgeInsetsGeometry padding = EasyFormActionButton.kPadding,
     Alignment alignment = Alignment.center,
   }) : super(
@@ -33,7 +33,7 @@ class EasyFormResetButton extends EasyFormActionButton {
   /// Creates a widget that creates a form reset button with text as a child.
   factory EasyFormResetButton.text(
     String text, {
-    EasyFormActionButtonBuilder builder,
+    EasyFormActionButtonBuilder? builder,
     EdgeInsetsGeometry padding = EasyFormActionButton.kPadding,
     Alignment alignment = Alignment.center,
   }) {
@@ -63,7 +63,7 @@ class EasyFormResetButton extends EasyFormActionButton {
   /// you create a widget.
   static EasyFormActionButtonBuilder defaultBuilder = _defaultBuilder;
 
-  static Widget _defaultBuilder(BuildContext context, Key key, Widget child,
+  static Widget _defaultBuilder(BuildContext context, Key? key, Widget child,
       VoidCallback onPressed, EasyFormAdaptivity adaptivity) {
     switch (adaptivity) {
       case EasyFormAdaptivity.cupertino:

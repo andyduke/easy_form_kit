@@ -27,21 +27,20 @@ class EasyFormSaveButton extends EasyFormActionButton {
   /// Indicator size
   final Size indicatorSize;
 
-  final EasyFormSaveButtonIndicatorBuilder _indicatorBuilder;
-  final EasyFormSaveButtonLayoutBuilder _layoutBuilder;
+  final EasyFormSaveButtonIndicatorBuilder? _indicatorBuilder;
+  final EasyFormSaveButtonLayoutBuilder? _layoutBuilder;
 
   /// Creates a widget that creates a form save button.
   const EasyFormSaveButton({
-    Key key,
-    @required Widget child,
+    Key? key,
+    required Widget child,
     this.indicatorSize = kIndicatorSize,
-    EasyFormSaveButtonIndicatorBuilder indicatorBuilder,
-    EasyFormActionButtonBuilder builder,
+    EasyFormSaveButtonIndicatorBuilder? indicatorBuilder,
+    EasyFormActionButtonBuilder? builder,
     EdgeInsetsGeometry padding = EasyFormActionButton.kPadding,
     Alignment alignment = Alignment.center,
-    EasyFormSaveButtonLayoutBuilder layoutBuilder,
-  })  : assert(indicatorSize != null),
-        _indicatorBuilder = indicatorBuilder,
+    EasyFormSaveButtonLayoutBuilder? layoutBuilder,
+  })  : _indicatorBuilder = indicatorBuilder,
         _layoutBuilder = layoutBuilder,
         super(
           key: key,
@@ -55,11 +54,11 @@ class EasyFormSaveButton extends EasyFormActionButton {
   factory EasyFormSaveButton.text(
     String text, {
     Size indicatorSize = kIndicatorSize,
-    EasyFormSaveButtonIndicatorBuilder indicatorBuilder,
-    EasyFormActionButtonBuilder builder,
+    EasyFormSaveButtonIndicatorBuilder? indicatorBuilder,
+    EasyFormActionButtonBuilder? builder,
     EdgeInsetsGeometry padding = EasyFormActionButton.kPadding,
     Alignment alignment = Alignment.center,
-    EasyFormSaveButtonLayoutBuilder layoutBuilder,
+    EasyFormSaveButtonLayoutBuilder? layoutBuilder,
   }) {
     return EasyFormSaveButton(
       child: Text(text),
@@ -104,7 +103,7 @@ class EasyFormSaveButton extends EasyFormActionButton {
       context,
       isSaving ? Opacity(child: body, opacity: 0) : body,
       isSaving
-          ? indicatorBuilder?.call(context, indicatorSize, form.adaptivity)
+          ? indicatorBuilder.call(context, indicatorSize, form.adaptivity)
           : SizedBox.fromSize(size: indicatorSize),
     );
 
@@ -168,7 +167,7 @@ class EasyFormSaveButton extends EasyFormActionButton {
   static Widget _defaultIndicatorBuilder(
       BuildContext context, Size size, EasyFormAdaptivity adaptivity) {
     final ThemeData theme = Theme.of(context);
-    final Color color = theme?.colorScheme?.onPrimary;
+    final Color? color = theme.colorScheme.onPrimary;
 
     Widget indicator;
     switch (adaptivity) {

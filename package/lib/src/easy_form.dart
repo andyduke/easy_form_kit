@@ -106,16 +106,15 @@ class EasyForm extends StatefulWidget {
   ///
   /// The [child] argument must not be null.
   const EasyForm({
-    Key key,
-    @required this.child,
+    Key? key,
+    required this.child,
     this.adaptivity = EasyFormAdaptivity.auto,
     this.onWillPop,
     this.onChanged,
     this.onSave,
     this.onSaved,
     this.autovalidateMode = EasyAutovalidateMode.disabled,
-  })  : assert(child != null),
-        super(key: key);
+  }) : super(key: key);
 
   /// Returns the closest [EasyFormState] which encloses the given context.
   ///
@@ -125,8 +124,8 @@ class EasyForm extends StatefulWidget {
   /// EasyFormState form = EasyForm.of(context);
   /// form.save();
   /// ```
-  static EasyFormState of(BuildContext context) {
-    final _FormScope scope =
+  static EasyFormState? of(BuildContext context) {
+    final _FormScope? scope =
         context.dependOnInheritedWidgetOfExactType<_FormScope>();
     return scope?._formState;
   }
@@ -153,13 +152,13 @@ class EasyForm extends StatefulWidget {
   ///
   ///  * [WillPopScope], another widget that provides a way to intercept the
   ///    back button.
-  final WillPopCallback onWillPop;
+  final WillPopCallback? onWillPop;
 
   /// Called when one of the form fields changes.
   ///
   /// In addition to this callback being invoked, all the form fields themselves
   /// will rebuild.
-  final EasyFormChangeCallback onChanged;
+  final EasyFormChangeCallback? onChanged;
 
   /// Called when the form is being saved using the `save` method or
   /// the [EasyFormSaveButton] button.
@@ -171,11 +170,11 @@ class EasyForm extends StatefulWidget {
   /// The callback is asynchronous, for example, you can pass the form data to
   /// the API and wait for the result of the request, the result can be returned
   /// and it will be passed to `onSaved`.
-  final EasyFormFieldSaveCallback onSave;
+  final EasyFormFieldSaveCallback? onSave;
 
   /// Called after the `onSave` callback completes, the result from `onSave`
   /// is passed to `onSaved` as a parameter.
-  final EasyFormFieldSavedCallback onSaved;
+  final EasyFormFieldSavedCallback? onSaved;
 
   /// Used to enable/disable form fields auto validation and update their error
   /// text.
@@ -196,7 +195,7 @@ class EasyForm extends StatefulWidget {
 class EasyFormState extends State<EasyForm> {
   final ValueNotifier<bool> _isSaving = ValueNotifier(false);
 
-  EasyFormAdaptivity _adaptivity;
+  EasyFormAdaptivity? _adaptivity;
 
   int _generation = 0;
   bool _hasInteractedByUser = false;
@@ -210,16 +209,14 @@ class EasyFormState extends State<EasyForm> {
   /// The mode of adaptability of form elements, in which design system
   /// the form elements will be displayed: Material, Apple, or
   /// will be automatically determined based on the platform.
-  // EasyFormAdaptivity get adaptivity => widget?.adaptivity ?? EasyFormAdaptivity.auto;
-  EasyFormAdaptivity get adaptivity => _adaptivity;
+  EasyFormAdaptivity get adaptivity => _adaptivity ?? EasyFormAdaptivity.auto;
 
   @override
   void didChangeDependencies() {
     if (_adaptivity == null) {
-      _adaptivity = widget?.adaptivity ?? EasyFormAdaptivity.auto;
+      _adaptivity = widget.adaptivity;
       if (_adaptivity == EasyFormAdaptivity.auto) {
-        final TargetPlatform platform =
-            Theme.of(context)?.platform ?? TargetPlatform.android;
+        final TargetPlatform platform = Theme.of(context).platform;
         switch (platform) {
           case TargetPlatform.android:
           case TargetPlatform.fuchsia:
@@ -247,8 +244,8 @@ class EasyFormState extends State<EasyForm> {
 
   // Called when a form field has changed. This will cause all form fields
   // to rebuild, useful if form fields have interdependencies.
-  void _fieldDidChange(EasyFormFieldState<dynamic> field) {
-    if (widget.onChanged != null) widget.onChanged(field);
+  void _fieldDidChange(EasyFormFieldState<dynamic>? field) {
+    widget.onChanged?.call(field);
 
     _hasInteractedByUser = _fields
         .any((EasyFormFieldState<dynamic> field) => field._hasInteractedByUser);
@@ -355,7 +352,7 @@ class EasyFormState extends State<EasyForm> {
 
     _hasInteractedByUser = true;
     _forceRebuild();
-    final EasyFormFieldState<dynamic> errorField = _validate();
+    final EasyFormFieldState<dynamic>? errorField = _validate();
 
     if (errorField != null) {
       errorField.focus();
@@ -364,9 +361,9 @@ class EasyFormState extends State<EasyForm> {
     return errorField == null;
   }
 
-  EasyFormFieldState<dynamic> _validate() {
+  EasyFormFieldState<dynamic>? _validate() {
     final _values = values();
-    EasyFormFieldState<dynamic> errorField;
+    EasyFormFieldState<dynamic>? errorField;
     for (final EasyFormFieldState<dynamic> field in _fields) {
       if (!field.validate(_values) && (errorField == null)) {
         errorField = field;
@@ -378,11 +375,11 @@ class EasyFormState extends State<EasyForm> {
 
 class _FormScope extends InheritedWidget {
   const _FormScope({
-    Key key,
-    Widget child,
-    EasyFormState formState,
-    int generation,
-  })  : _formState = formState,
+    Key? key,
+    required Widget child,
+    required EasyFormState formState,
+    required int generation,
+  })   : _formState = formState,
         _generation = generation,
         super(key: key, child: child);
 
@@ -417,7 +414,7 @@ typedef EasyFormFieldSavedCallback = void Function(
 
 /// Signature for the callback when the field changes.
 typedef EasyFormChangeCallback = void Function(
-    EasyFormFieldState<dynamic> field);
+    EasyFormFieldState<dynamic>? field);
 
 // --- EasyFormField
 
@@ -428,7 +425,7 @@ typedef EasyFormChangeCallback = void Function(
 ///
 /// Used by [EasyFormField.validator].
 typedef EasyFormFieldValidator<T> = String Function(T value,
-    [Map<String, dynamic> values]);
+    [Map<String, dynamic>? values]);
 
 /// Signature for being notified when a form field changes value.
 ///
@@ -471,17 +468,16 @@ class EasyFormField<T> extends StatefulWidget {
   ///
   /// The [name] and [builder] arguments must not be null.
   const EasyFormField({
-    Key key,
-    @required this.name,
-    @required this.builder,
+    Key? key,
+    required this.name,
+    required this.builder,
     this.focusNode,
     this.onSaved,
     this.validator,
     this.initialValue,
     this.enabled = true,
     this.autovalidateMode = EasyAutovalidateMode.disabled,
-  })  : assert(builder != null),
-        super(key: key);
+  }) : super(key: key);
 
   /// Name of the field.
   ///
@@ -490,11 +486,11 @@ class EasyFormField<T> extends StatefulWidget {
   final String name;
 
   /// Focus node.
-  final FocusNode focusNode;
+  final FocusNode? focusNode;
 
   /// An optional method to call with the final value when the form is saved via
   /// [EasyFormState.save].
-  final EasyFormFieldSetter<T> onSaved;
+  final EasyFormFieldSetter<T>? onSaved;
 
   /// An optional method that validates an input. Returns an error string to
   /// display if the input is invalid, or null otherwise.
@@ -509,7 +505,7 @@ class EasyFormField<T> extends StatefulWidget {
   /// not an error is displayed, either wrap the [EasyTextFormField] in a fixed
   /// height parent like [SizedBox], or set the [InputDecoration.helperText]
   /// parameter to a space.
-  final EasyFormFieldValidator<T> validator;
+  final EasyFormFieldValidator<T>? validator;
 
   /// Function that returns the widget representing this form field. It is
   /// passed the form field state as input, containing the current value and
@@ -517,7 +513,7 @@ class EasyFormField<T> extends StatefulWidget {
   final EasyFormFieldBuilder<T> builder;
 
   /// An optional value to initialize the form field to, or null otherwise.
-  final T initialValue;
+  final T? initialValue;
 
   /// Whether the form is able to receive user input.
   ///
@@ -547,28 +543,26 @@ class EasyFormField<T> extends StatefulWidget {
 
 /// The current state of a [EasyFormField]. Passed to the [EasyFormFieldBuilder] method
 /// for use in constructing the form field's widget.
-class EasyFormFieldState<T> extends State<EasyFormField<T>> {
-  T _value;
-  String _errorText;
+class EasyFormFieldState<T> extends State<EasyFormField<T?>> {
+  T? _value;
+  String? _errorText;
   bool _hasInteractedByUser = false;
 
-  FocusNode _focusNode;
+  FocusNode? _focusNode;
   FocusNode get focusNode {
-    if (widget.focusNode != null) return widget.focusNode;
-    if (_focusNode == null) _focusNode = FocusNode();
-    return _focusNode;
+    return widget.focusNode ?? (_focusNode ??= FocusNode());
   }
 
   /// Name of the field.
   String get name => widget.name;
 
   /// The current value of the form field.
-  T get value => _value;
+  T? get value => _value;
 
   /// The current validation error returned by the [EasyFormField.validator]
   /// callback, or null if no errors have been triggered. This only updates when
   /// [validate] is called.
-  String get errorText => _errorText;
+  String? get errorText => _errorText;
 
   /// True if this field has any validation errors.
   bool get hasError => _errorText != null;
@@ -581,7 +575,7 @@ class EasyFormFieldState<T> extends State<EasyFormField<T>> {
   /// See also:
   ///
   ///  * [validate], which may update [errorText] and [hasError].
-  bool get isValid => widget.validator?.call(_value) == null;
+  bool get isValid => _validate() == null;
 
   /// Sets the input focus to this field.
   void focus() {
@@ -602,19 +596,19 @@ class EasyFormFieldState<T> extends State<EasyFormField<T>> {
 
   /// Calls the [EasyFormField]'s onSaved method with the current value.
   void save() {
-    if (widget.onSaved != null) widget.onSaved(value);
+    widget.onSaved?.call(value);
   }
 
   /// Validate & saves form.
   Future<bool> saveForm() async {
-    return EasyForm.of(context)?.save() ?? false;
+    return EasyForm.of(context)?.save() ?? Future.value(false);
   }
 
   @mustCallSuper
   @protected
   void resetValue() {
     setState(() {
-      _value = widget.initialValue ?? '';
+      _value = widget.initialValue;
       _hasInteractedByUser = false;
       _errorText = null;
     });
@@ -633,19 +627,19 @@ class EasyFormFieldState<T> extends State<EasyFormField<T>> {
   ///
   ///  * [isValid], which passively gets the validity without setting
   ///    [errorText] or [hasError].
-  bool validate([Map<String, dynamic> values]) {
+  bool validate([Map<String, dynamic>? values]) {
     setState(() {
       _validate(values);
     });
     return !hasError;
   }
 
-  void _validate([Map<String, dynamic> values]) {
+  String? _validate([Map<String, dynamic>? values]) {
     if (values == null) {
-      values = EasyForm.of(context).values();
+      values = EasyForm.of(context)?.values();
     }
 
-    if (widget.validator != null) _errorText = widget.validator(_value, values);
+    return _errorText = widget.validator?.call(_value, values);
   }
 
   /// Updates this field's state to the new value. Useful for responding to

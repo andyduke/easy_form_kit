@@ -66,14 +66,13 @@ import 'controller.dart';
 ///
 abstract class EasyFormGenericField<T> extends StatefulWidget {
   final EasyFormFieldController<T> controller;
-  final ValueChanged<T> onChange;
+  final ValueChanged<T?>? onChange;
 
   const EasyFormGenericField({
-    Key key,
-    @required this.controller,
+    Key? key,
+    required this.controller,
     this.onChange,
-  })  : assert(controller != null),
-        super(key: key);
+  }) : super(key: key);
 
   Widget build(BuildContext context) {
     throw UnimplementedError(
@@ -81,10 +80,10 @@ abstract class EasyFormGenericField<T> extends StatefulWidget {
   }
 
   /// The current value of the form field.
-  T get value => controller.value;
+  T? get value => controller.value;
 
   /// Set the current value of the form field.
-  set value(T newValue) {
+  set value(T? newValue) {
     controller.value = newValue;
     onChange?.call(controller.value);
   }
@@ -99,10 +98,10 @@ class EasyFormGenericFieldState<T> extends State<EasyFormGenericField<T>> {
   EasyFormFieldController<T> get controller => widget.controller;
 
   /// The current value of the form field.
-  T get value => widget.value;
+  T? get value => widget.value;
 
   /// Set the current value of the form field.
-  set value(T newValue) {
+  set value(T? newValue) {
     widget.value = newValue;
   }
 

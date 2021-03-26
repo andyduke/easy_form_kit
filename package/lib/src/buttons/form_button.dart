@@ -3,7 +3,7 @@ import '../easy_form.dart';
 
 /// Button builder signature
 typedef EasyFormButtonBuilder = Widget Function(
-    BuildContext context, EasyFormState form);
+    BuildContext context, EasyFormState? form);
 
 /// Builder widget that passes a link to the [EasyFormState] to the `builder`.
 ///
@@ -22,10 +22,9 @@ class EasyFormButton extends StatelessWidget {
 
   /// Creates a widget that creates a form button.
   const EasyFormButton({
-    Key key,
-    @required this.builder,
-  })  : assert(builder != null),
-        super(key: key);
+    Key? key,
+    required this.builder,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
