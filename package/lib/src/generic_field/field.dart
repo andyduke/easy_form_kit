@@ -80,8 +80,10 @@ abstract class EasyFormGenericField<T> extends StatefulWidget {
         'The EasyFormGenericField.build method is not implemented.');
   }
 
+  /// The current value of the form field.
   T get value => controller.value;
 
+  /// Set the current value of the form field.
   set value(T newValue) {
     controller.value = newValue;
     onChange?.call(controller.value);
@@ -91,24 +93,36 @@ abstract class EasyFormGenericField<T> extends StatefulWidget {
   EasyFormGenericFieldState<T> createState() => EasyFormGenericFieldState<T>();
 }
 
+/// The current state of a [EasyFormGenericField].
 class EasyFormGenericFieldState<T> extends State<EasyFormGenericField<T>> {
+  /// Form field controller.
+  EasyFormFieldController<T> get controller => widget.controller;
+
+  /// The current value of the form field.
+  T get value => widget.value;
+
+  /// Set the current value of the form field.
+  set value(T newValue) {
+    widget.value = newValue;
+  }
+
   @override
   void initState() {
-    widget.controller.addListener(_update);
+    controller.addListener(_update);
     super.initState();
   }
 
   @override
   void dispose() {
-    widget.controller.removeListener(_update);
+    controller.removeListener(_update);
     super.dispose();
   }
 
   @override
   void didUpdateWidget(covariant EasyFormGenericField<T> oldWidget) {
-    if (oldWidget.controller != widget.controller) {
+    if (oldWidget.controller != controller) {
       oldWidget.controller.removeListener(_update);
-      widget.controller.addListener(_update);
+      controller.addListener(_update);
     }
 
     super.didUpdateWidget(oldWidget);

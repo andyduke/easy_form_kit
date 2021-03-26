@@ -179,6 +179,58 @@ ColorFormField(
 ),
 ```
 
+### Stateful custom field
+
+The `EasyFormGenericField` widget is a stateful widget, if you need to store an intermediate state (for example, a link to a photo picker), this is how you can transform the above field code into a stateful widget:
+```dart
+class ColorField extends EasyFormGenericField<Color> {
+  ColorField({
+    Key key,
+    @required ColorController controller,
+    ValueChanged<Color> onChange,
+  }) : super(
+          key: key,
+          controller: controller,
+          onChange: onChange,
+        );
+
+  @override
+  ColorFieldState createState() => ColorFieldState();
+}
+
+class ColorFieldState extends EasyFormGenericFieldState<Color> {
+  void _change() {
+    value = _getRandomColor();
+  }
+
+  Color _getRandomColor() {
+    return Color((Random().nextDouble() * 0xFFFFFF).toInt()).withOpacity(1.0);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: GestureDetector(
+        onTap: _change,
+        child: Container(
+          width: 50,
+          height: 50,
+          decoration: BoxDecoration(
+            color: value,
+            border: Border.all(
+              color: Colors.grey,
+              width: 2,
+            ),
+            shape: BoxShape.circle,
+          ),
+        ),
+      ),
+    );
+  }
+}
+```
+
 ## Form buttons
 
 For convenience, `EasyForm` has three types of buttons:

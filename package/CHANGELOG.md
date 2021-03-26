@@ -1,3 +1,7 @@
+## 1.0.9
+
+* Added `value` and `controller` properties to `EasyFormGenericFieldState` to access the current field value and its controller. 
+
 ## 1.0.8+1
 
 * **Breaking changes:** `EasyForm` adds a second parameter to the `onSave` callback and a third parameter to the `onSaved` callback, the state of the form itself.
