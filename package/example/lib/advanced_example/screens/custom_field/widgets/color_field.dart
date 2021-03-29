@@ -5,9 +5,9 @@ import 'package:easy_form_example/advanced_example/screens/custom_field/widgets/
 
 class ColorField extends EasyFormGenericField<Color> {
   ColorField({
-    Key key,
-    @required ColorController controller,
-    ValueChanged<Color> onChange,
+    Key? key,
+    required ColorController controller,
+    ValueChanged<Color?>? onChange,
   }) : super(
           key: key,
           controller: controller,

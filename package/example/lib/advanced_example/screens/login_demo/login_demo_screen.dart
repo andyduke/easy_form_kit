@@ -20,7 +20,7 @@ class LoginDemoScreen extends StatelessWidget {
               },
               onSaved: (response, values, form) {
                 if (response['hasError']) {
-                  _alert(context, response['error']);
+                  _alert(context, response['error'] ?? 'Unknown error');
                 } else {
                   Navigator.of(context).push(
                     MaterialPageRoute(
@@ -40,7 +40,7 @@ class LoginDemoScreen extends StatelessWidget {
                       hintText: 'Enter your username',
                     ),
                     validator: (value, [values]) {
-                      if (value.isEmpty) {
+                      if (value?.isEmpty ?? true) {
                         return 'Please enter some text';
                       }
                       return null;
@@ -55,7 +55,7 @@ class LoginDemoScreen extends StatelessWidget {
                     ),
                     obscureText: true,
                     validator: (value, [values]) {
-                      if (value.isEmpty) {
+                      if (value?.isEmpty ?? true) {
                         return 'Please enter some text';
                       }
                       return null;

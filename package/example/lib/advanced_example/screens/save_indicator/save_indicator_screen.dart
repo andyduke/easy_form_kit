@@ -28,7 +28,7 @@ class SaveIndicatorScreen extends StatelessWidget {
                         hintText: 'Enter your username',
                       ),
                       validator: (value, [values]) {
-                        if (value.isEmpty) {
+                        if (value?.isEmpty ?? true) {
                           return 'Please enter some text';
                         }
                         return null;
@@ -43,7 +43,7 @@ class SaveIndicatorScreen extends StatelessWidget {
                       ),
                       obscureText: true,
                       validator: (value, [values]) {
-                        if (value.isEmpty) {
+                        if (value?.isEmpty ?? true) {
                           return 'Please enter some text';
                         }
                         return null;
@@ -56,7 +56,7 @@ class SaveIndicatorScreen extends StatelessWidget {
                           EasyFormButton(
                             builder: (context, form) => OutlinedButton(
                               child: Text('Sign In'),
-                              onPressed: () => form.save(),
+                              onPressed: () => form?.save(),
                             ),
                           ),
                           const SizedBox(width: 24),

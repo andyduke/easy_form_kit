@@ -1,6 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:easy_form_kit/easy_form_kit.dart';
 
+extension StringNullEmptyChecks on String? {
+  bool get isNullOrEmpty => (this == null) ? true : (this?.isEmpty ?? true);
+
+  bool get isNotNullOrEmpty =>
+      (this == null) ? false : (this?.isNotEmpty ?? false);
+}
+
 void main() {
   runApp(MyApp());
 }
@@ -36,7 +43,7 @@ class ExampleScreen extends StatelessWidget {
               },
               onSaved: (response, values, form) {
                 if (response['hasError']) {
-                  _alert(context, response['error']);
+                  _alert(context, response['error'] ?? 'Unknown error');
                 } else {
                   Navigator.of(context).push(
                     MaterialPageRoute(
@@ -55,7 +62,7 @@ class ExampleScreen extends StatelessWidget {
                       hintText: 'Enter your username',
                     ),
                     validator: (value, [values]) {
-                      if (value.isEmpty) {
+                      if (value.isNullOrEmpty) {
                         return 'Please enter some text';
                       }
                       return null;
@@ -69,7 +76,7 @@ class ExampleScreen extends StatelessWidget {
                     ),
                     obscureText: true,
                     validator: (value, [values]) {
-                      if (value.isEmpty) {
+                      if (value.isNullOrEmpty) {
                         return 'Please enter some text';
                       }
                       return null;

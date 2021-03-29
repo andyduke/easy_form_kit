@@ -3,7 +3,7 @@ import 'package:easy_form_kit/easy_form_kit.dart';
 import 'package:easy_form_example/advanced_example/screens/custom_field/widgets/color_form_field.dart';
 
 class CustomFieldScreen extends StatelessWidget {
-  final ValueNotifier<Color> color = ValueNotifier(Colors.teal);
+  final ValueNotifier<Color?> color = ValueNotifier(Colors.teal);
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +53,7 @@ class CustomFieldScreen extends StatelessWidget {
                     const SizedBox(height: 16),
                     ValueListenableBuilder(
                       valueListenable: color,
-                      builder: (context, colorValue, child) => Container(
+                      builder: (context, Color? colorValue, child) => Container(
                         width: 60,
                         height: 60,
                         decoration: BoxDecoration(

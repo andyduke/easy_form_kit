@@ -1,3 +1,7 @@
+## 2.0.0-nullsafety.1
+
+* Now the return type of `EasyFormFieldValidator` is `String?`, i.e. allows you to return `null` if the validation is successful.
+
 ## 2.0.0-nullsafety.0
 
 * Migrate to null safety.

@@ -17,7 +17,7 @@ class SaveErrorScreen extends StatelessWidget {
               },
               onSaved: (response, values, form) {
                 if (response['hasError']) {
-                  _alert(context, response['error']);
+                  _alert(context, response['error'] ?? 'Unknown error');
                 } else {
                   Navigator.of(context).push(
                     MaterialPageRoute(
@@ -36,7 +36,7 @@ class SaveErrorScreen extends StatelessWidget {
                       hintText: 'Enter your username',
                     ),
                     validator: (value, [values]) {
-                      if (value.isEmpty) {
+                      if (value?.isEmpty ?? true) {
                         return 'Please enter some text';
                       }
                       return null;
@@ -50,7 +50,7 @@ class SaveErrorScreen extends StatelessWidget {
                     ),
                     obscureText: true,
                     validator: (value, [values]) {
-                      if (value.isEmpty) {
+                      if (value?.isEmpty ?? true) {
                         return 'Please enter some text';
                       }
                       return null;

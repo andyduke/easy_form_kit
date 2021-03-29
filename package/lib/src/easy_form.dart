@@ -424,7 +424,7 @@ typedef EasyFormChangeCallback = void Function(
 /// otherwise.
 ///
 /// Used by [EasyFormField.validator].
-typedef EasyFormFieldValidator<T> = String Function(T value,
+typedef EasyFormFieldValidator<T> = String? Function(T value,
     [Map<String, dynamic>? values]);
 
 /// Signature for being notified when a form field changes value.
