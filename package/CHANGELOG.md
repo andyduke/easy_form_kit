@@ -1,3 +1,11 @@
+## 2.0.0-nullsafety.2
+
+### `EasyCustomFormField`:
+* `valueGet` & `valueSet` now accept a nullable `value` parameter.
+* `controllerBuilder` & `recreateController` now return a non-null controller type.
+* `setValue` now accepts a nullable `value` parameter.
+* The `builder` callback now accepts a non-null controller type.
+
 ## 2.0.0-nullsafety.1
 
 * Now the return type of `EasyFormFieldValidator` is `String?`, i.e. allows you to return `null` if the validation is successful.

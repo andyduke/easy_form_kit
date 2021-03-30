@@ -86,7 +86,7 @@ typedef EasyFormCustomFieldBuilder<T, C> = Widget Function(
 ///  * [TextField], which is the underlying text field without the [Form]
 ///    integration.
 ///  * Learn how to use a [Controller] in one of our [cookbook recipes](https://flutter.dev/docs/cookbook/forms/text-field-changes#2-use-a-texteditingcontroller).
-class EasyCustomFormField<T, C extends ValueNotifier?>
+class EasyCustomFormField<T, C extends ValueNotifier>
     extends EasyFormField<T?> {
   /// Creates a [EasyCustomFormField] that contains a custom field.
   ///
@@ -169,7 +169,7 @@ class EasyCustomFormField<T, C extends ValueNotifier?>
   /// ```dart
   /// valueGet: (controller) => controller.text,
   /// ```
-  final ValueOfGetter<T, C>? valueGet;
+  final ValueOfGetter<T?, C>? valueGet;
 
   /// Callback to set controller value, if not set - controller's
   /// `value` property is used.
@@ -179,39 +179,39 @@ class EasyCustomFormField<T, C extends ValueNotifier?>
   /// ```dart
   /// valueSet: (controller, newText) => controller.text = newText,
   /// ```
-  final ValueOfSetter<T, C>? valueSet;
+  final ValueOfSetter<T?, C>? valueSet;
 
   /// A builder that instantiates a controller of type `C` for
   /// a value of type `T`.
   ///
   /// Calls the `controllerBuilder` callback by default.
   /// Can be overridden in a descendant for custom implementation.
-  C? createController(T value) => controllerBuilder(value);
+  C createController(T value) => controllerBuilder(value);
 
   /// A builder that recreates a controller from an old controller.
   ///
   /// By default, it calls the `controllerRebuilder` callback or,
   /// if not defined, it calls the `controllerBuilder`.
   /// Can be overridden in a descendant for custom implementation.
-  C? recreateController(C oldController) =>
+  C recreateController(C oldController) =>
       controllerRebuilder?.call(oldController) ??
-      controllerBuilder(oldController?.value);
+      controllerBuilder(oldController.value);
 
   /// Getter, to get the value from the controller.
   ///
   /// By default, it calls the `valueGet` callback, if not defined,
   /// it returns the controller's `value` property.
-  T? valueOf(C controller) => valueGet?.call(controller) ?? controller?.value;
+  T? valueOf(C controller) => valueGet?.call(controller) ?? controller.value;
 
   /// Setter, to set the controller value.
   ///
   /// By default, it calls the `valueSet` callback, if not defined,
   /// it sets the `value` property of the controller.
-  setValue(C controller, T value) {
+  setValue(C controller, T? value) {
     if (valueSet != null) {
       valueSet!.call(controller, value);
     } else {
-      controller?.value = value;
+      controller.value = value;
     }
   }
 
@@ -220,14 +220,14 @@ class EasyCustomFormField<T, C extends ValueNotifier?>
       _EasyCustomFormFieldState<T, C>();
 }
 
-class _EasyCustomFormFieldState<T, C extends ValueNotifier?>
+class _EasyCustomFormFieldState<T, C extends ValueNotifier>
     extends EasyFormFieldState<T?> {
   C? _controller;
 
-  C? get controller => widget.controller ?? _controller;
+  C get controller => widget.controller ?? _controller!;
 
   @override
-  EasyCustomFormField<T?, C?> get widget =>
+  EasyCustomFormField<T?, C> get widget =>
       super.widget as EasyCustomFormField<T?, C>;
 
   @override
@@ -236,7 +236,7 @@ class _EasyCustomFormFieldState<T, C extends ValueNotifier?>
     if (widget.controller == null) {
       _controller = widget.createController(widget.initialValue);
     } else {
-      widget.controller!.addListener(_handleControllerChanged);
+      widget.controller?.addListener(_handleControllerChanged);
     }
   }
 
@@ -247,10 +247,11 @@ class _EasyCustomFormFieldState<T, C extends ValueNotifier?>
       oldWidget.controller?.removeListener(_handleControllerChanged);
       widget.controller?.addListener(_handleControllerChanged);
 
-      if (oldWidget.controller != null && widget.controller == null)
-        _controller = widget.recreateController(oldWidget.controller);
+      if (oldWidget.controller != null && widget.controller == null) {
+        _controller = widget.recreateController(oldWidget.controller!);
+      }
       if (widget.controller != null) {
-        setValue(widget.valueOf(widget.controller));
+        setValue(widget.valueOf(widget.controller!));
         if (oldWidget.controller == null) _controller = null;
       }
     }

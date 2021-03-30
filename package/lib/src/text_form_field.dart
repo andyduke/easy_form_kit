@@ -128,7 +128,7 @@ class EasyTextFormField
           controllerRebuilder: (oldController) =>
               TextEditingController.fromValue(oldController.value),
           valueGet: (controller) => controller.text,
-          valueSet: (controller, value) => controller.text = value,
+          valueSet: (controller, value) => controller.text = value ?? '',
           builder: (state, onChangedHandler) {
             final InputDecoration effectiveDecoration = decoration
                 .applyDefaults(Theme.of(state.context).inputDecorationTheme);
@@ -220,7 +220,7 @@ class EasyTextFormField
           controllerRebuilder: (oldController) =>
               TextEditingController.fromValue(oldController.value),
           valueGet: (controller) => controller.text,
-          valueSet: (controller, value) => controller.text = value,
+          valueSet: (controller, value) => controller.text = value ?? '',
           builder: builder,
           onChanged: onChanged,
           onSaved: onSaved,
