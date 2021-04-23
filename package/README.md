@@ -146,24 +146,16 @@ class _SampleFormPageState extends State<SampleFormPage> {
 
 An example of using the `setErrors` method in `EasyFormState`:
 ```dart
-class SampleFormPage extends StatefulWidget {
-  @override
-  _SampleFormPageState createState() => _SampleFormPageState();
-}
-
-class _SampleFormPageState extends State<SampleFormPage> {
-  final GlobalKey<EasyFormState> _formKey = GlobalKey();
-
+class SampleFormPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return EasyForm(
-      key: _formKey,
       onSave: (values, form) async {
         return API.login(values['username'], values['password']);
       },
       onSaved: (response, values, form) {
         if (response.hasError) {
-          _formKey.currentState?.setErrors(response.fieldsErrors); // This is where errors are set in the fields.
+          form.setErrors(response.fieldsErrors); // This is where errors are set in the fields.
         } else {
           // ... navigate to another screen
         }

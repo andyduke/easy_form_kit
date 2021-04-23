@@ -46,6 +46,14 @@ class _FieldsErrorsScreenState extends State<FieldsErrorsScreen> {
                 });
                 return false;
                 */
+
+                /*
+                form.setErrors({
+                  'username': 'Invalid username.',
+                  'password': 'Password is too short.',
+                });
+                return false;
+                */
               },
               onSaved: (response, values, form) {
                 if (response) {
