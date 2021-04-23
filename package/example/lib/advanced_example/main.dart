@@ -1,3 +1,4 @@
+import 'package:easy_form_example/advanced_example/screens/fields_errors/fields_errors_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_form_example/advanced_example/screens/custom_field/custom_field_screen.dart';
 import 'package:easy_form_example/advanced_example/screens/login_demo/login_demo_screen.dart';
@@ -56,6 +57,11 @@ class StartScreen extends StatelessWidget {
                   _DemoButton(
                     text: 'Save error',
                     builder: (context) => SaveErrorScreen(),
+                  ),
+                  const SizedBox(height: 16),
+                  _DemoButton(
+                    text: 'Fields errors',
+                    builder: (context) => FieldsErrorsScreen(),
                   ),
                 ],
               ),

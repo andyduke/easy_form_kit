@@ -75,6 +75,138 @@ During the save of the form, the values from all fields are collected into the `
 
 The `onSave` callback is asynchronous, you can save or send values in it, wait for the response and pass it on to `onSaved`. If `onSave` returns nothing, a map with the values of the form fields will be passed to `onSaved`.
 
+## Error handling
+
+If you need to pass errors to fields received from outside, for example, through the API, you can use the `errors` parameter of the `EasyForm` constructor or the `setErrors` method of `EasyFormState`.
+
+An example of using the `errors` parameter of the `EasyForm` constructor:
+```dart
+class SampleFormPage extends StatefulWidget {
+  @override
+  _SampleFormPageState createState() => _SampleFormPageState();
+}
+
+class _SampleFormPageState extends State<SampleFormPage> {
+  Map<String, String> errors;
+
+  @override
+  Widget build(BuildContext context) {
+    return EasyForm(
+      errors: errors, // This is where errors are set in the fields.
+      onSave: (values, form) async {
+        return API.login(values['username'], values['password']);
+      },
+      onSaved: (response, values, form) {
+        if (response.hasError) {
+          setState(() {
+            errors = response.fieldsErrors;
+          });
+        } else {
+          // ... navigate to another screen
+        }
+      },
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          EasyTextFormField(
+            name: 'username',
+            decoration: const InputDecoration(
+              hintText: 'Enter your username',
+            ),
+            validator: (value) {
+              if (value.isEmpty) {
+                return 'Please enter some text';
+              }
+              return null;
+            },
+          ),
+          const SizedBox(height: 16.0),
+          EasyTextFormField(
+            name: 'password',
+            decoration: const InputDecoration(
+              hintText: 'Enter your password',
+            ),
+            validator: (value) {
+              if (value.isEmpty) {
+                return 'Please enter some text';
+              }
+              return null;
+            },
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 24.0),
+            child: EasyFormSaveButton.text('Sign In'),
+          ),
+        ],
+      ),
+    );
+  }
+}
+```
+
+An example of using the `setErrors` method in `EasyFormState`:
+```dart
+class SampleFormPage extends StatefulWidget {
+  @override
+  _SampleFormPageState createState() => _SampleFormPageState();
+}
+
+class _SampleFormPageState extends State<SampleFormPage> {
+  final GlobalKey<EasyFormState> _formKey = GlobalKey();
+
+  @override
+  Widget build(BuildContext context) {
+    return EasyForm(
+      key: _formKey,
+      onSave: (values, form) async {
+        return API.login(values['username'], values['password']);
+      },
+      onSaved: (response, values, form) {
+        if (response.hasError) {
+          _formKey.currentState?.setErrors(response.fieldsErrors); // This is where errors are set in the fields.
+        } else {
+          // ... navigate to another screen
+        }
+      },
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          EasyTextFormField(
+            name: 'username',
+            decoration: const InputDecoration(
+              hintText: 'Enter your username',
+            ),
+            validator: (value) {
+              if (value.isEmpty) {
+                return 'Please enter some text';
+              }
+              return null;
+            },
+          ),
+          const SizedBox(height: 16.0),
+          EasyTextFormField(
+            name: 'password',
+            decoration: const InputDecoration(
+              hintText: 'Enter your password',
+            ),
+            validator: (value) {
+              if (value.isEmpty) {
+                return 'Please enter some text';
+              }
+              return null;
+            },
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 24.0),
+            child: EasyFormSaveButton.text('Sign In'),
+          ),
+        ],
+      ),
+    );
+  }
+}
+```
+
 ## Custom fields
 
 For text fields, you can use the `EasyTextFormField` widget, which encapsulates the `TextField` widget with all its properties.

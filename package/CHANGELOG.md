@@ -1,3 +1,7 @@
+## 2.1.0
+
+* The `errors` property has been added to `EasyForm` and the `setErrors` method has been added to `EasyFormState`, for the ability to set errors in some fields, for example, received through the API.
+
 ## 2.0.0
 
 * Release of the null-safety version. 

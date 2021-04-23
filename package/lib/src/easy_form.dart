@@ -114,6 +114,7 @@ class EasyForm extends StatefulWidget {
     this.onSave,
     this.onSaved,
     this.autovalidateMode = EasyAutovalidateMode.disabled,
+    this.errors,
   }) : super(key: key);
 
   /// Returns the closest [EasyFormState] which encloses the given context.
@@ -182,6 +183,12 @@ class EasyForm extends StatefulWidget {
   /// {@macro flutter.widgets.form.autovalidateMode}
   final EasyAutovalidateMode autovalidateMode;
 
+  /// Sets errors in fields as a Map, where key is the name of the field and
+  /// value is the text of the error message.
+  ///
+  /// Can be null if there are no errors.
+  final Map<String, String>? errors;
+
   @override
   EasyFormState createState() => EasyFormState();
 }
@@ -206,6 +213,8 @@ class EasyFormState extends State<EasyForm> {
 
   ValueNotifier<bool> get isSaving => _isSaving;
 
+  Map<String, String>? errors;
+
   /// The mode of adaptability of form elements, in which design system
   /// the form elements will be displayed: Material, Apple, or
   /// will be automatically determined based on the platform.
@@ -213,6 +222,8 @@ class EasyFormState extends State<EasyForm> {
 
   @override
   void didChangeDependencies() {
+    errors = widget.errors;
+
     if (_adaptivity == null) {
       _adaptivity = widget.adaptivity;
       if (_adaptivity == EasyFormAdaptivity.auto) {
@@ -242,6 +253,15 @@ class EasyFormState extends State<EasyForm> {
     super.didChangeDependencies();
   }
 
+  @override
+  void didUpdateWidget(covariant EasyForm oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if (oldWidget.errors != widget.errors) {
+      errors = widget.errors;
+    }
+  }
+
   // Called when a form field has changed. This will cause all form fields
   // to rebuild, useful if form fields have interdependencies.
   void _fieldDidChange(EasyFormFieldState<dynamic>? field) {
@@ -259,6 +279,11 @@ class EasyFormState extends State<EasyForm> {
   }
 
   void _register(EasyFormFieldState<dynamic> field) {
+    final String? fieldError = errors?[field.name];
+    if (fieldError != null) {
+      field._setErrorText(fieldError);
+    }
+
     _fields.add(field);
   }
 
@@ -289,6 +314,24 @@ class EasyFormState extends State<EasyForm> {
         child: widget.child,
       ),
     );
+  }
+
+  /// Sets errors in fields as a Map, where key is the name of the field and
+  /// value is the text of the error message.
+  ///
+  /// Can be null if there are no errors.
+  void setErrors(Map<String, String>? newErrors) {
+    errors = newErrors;
+
+    for (final EasyFormFieldState<dynamic> field in _fields) {
+      if (errors != null && errors!.containsKey(field.name)) {
+        field._setErrorText(errors![field.name]);
+      } else {
+        field._setErrorText(null);
+      }
+    }
+
+    setState(() {});
   }
 
   /// Returns the values of form fields as a Map<String, dynamic>
@@ -343,12 +386,22 @@ class EasyFormState extends State<EasyForm> {
     }
   }
 
+  void _resetErrors() {
+    for (final EasyFormFieldState<dynamic> field in _fields) {
+      if (errors != null && errors!.containsKey(field.name)) {
+        errors!.remove(field.name);
+      }
+      field._setErrorText(null, silent: true);
+    }
+  }
+
   /// Validates every [EasyFormField] that is a descendant of this [EasyForm], and
   /// returns true if there are no errors.
   ///
   /// The form will rebuild to report the results.
   bool validate() {
     _resetFocus();
+    _resetErrors();
 
     _hasInteractedByUser = true;
     _forceRebuild();
@@ -563,6 +616,11 @@ class EasyFormFieldState<T> extends State<EasyFormField<T?>> {
   /// callback, or null if no errors have been triggered. This only updates when
   /// [validate] is called.
   String? get errorText => _errorText;
+
+  void _setErrorText(String? error, {bool silent = false}) {
+    _errorText = error;
+    if (!silent) setState(() {});
+  }
 
   /// True if this field has any validation errors.
   bool get hasError => _errorText != null;
