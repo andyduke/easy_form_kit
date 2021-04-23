@@ -1,3 +1,7 @@
+## 2.0.0
+
+* Release of the null-safety version. 
+
 ## 2.0.0-nullsafety.2
 
 ### `EasyCustomFormField`:
