@@ -187,7 +187,7 @@ class EasyForm extends StatefulWidget {
   /// value is the text of the error message.
   ///
   /// Can be null if there are no errors.
-  final Map<String, String>? errors;
+  final Map<String, String?>? errors;
 
   @override
   EasyFormState createState() => EasyFormState();
@@ -213,7 +213,7 @@ class EasyFormState extends State<EasyForm> {
 
   ValueNotifier<bool> get isSaving => _isSaving;
 
-  Map<String, String>? errors;
+  Map<String, String?>? errors;
 
   /// The mode of adaptability of form elements, in which design system
   /// the form elements will be displayed: Material, Apple, or
@@ -320,18 +320,18 @@ class EasyFormState extends State<EasyForm> {
   /// value is the text of the error message.
   ///
   /// Can be null if there are no errors.
-  void setErrors(Map<String, String>? newErrors) {
+  void setErrors(Map<String, String?>? newErrors) {
     errors = newErrors;
 
     for (final EasyFormFieldState<dynamic> field in _fields) {
       if (errors != null && errors!.containsKey(field.name)) {
-        field._setErrorText(errors![field.name]);
+        field._setErrorText(errors![field.name], silent: true);
       } else {
-        field._setErrorText(null);
+        field._setErrorText(null, silent: true);
       }
     }
 
-    setState(() {});
+    _forceRebuild();
   }
 
   /// Returns the values of form fields as a Map<String, dynamic>
@@ -423,6 +423,16 @@ class EasyFormState extends State<EasyForm> {
       }
     }
     return errorField;
+  }
+
+  /// Returns [EasyFormFieldState] for the field named `name`,
+  /// if no such field is found, returns null.
+  EasyFormFieldState? fieldByName(String name) {
+    final field = fields.cast<EasyFormFieldState?>().firstWhere(
+          (field) => field?.name == name,
+          orElse: () => null,
+        );
+    return field;
   }
 }
 
