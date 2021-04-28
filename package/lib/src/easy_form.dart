@@ -116,6 +116,8 @@ class EasyForm extends StatefulWidget {
     this.onSaved,
     this.autovalidateMode = EasyAutovalidateMode.disabled,
     this.errors,
+    this.scrollToFieldDuration = const Duration(milliseconds: 300),
+    this.scrollToFieldCurve = Curves.easeOut,
   }) : super(key: key);
 
   /// Returns the closest [EasyFormState] which encloses the given context.
@@ -189,6 +191,12 @@ class EasyForm extends StatefulWidget {
   ///
   /// Can be null if there are no errors.
   final Map<String, String?>? errors;
+
+  /// Duration of scrolling to the error field.
+  final Duration scrollToFieldDuration;
+
+  /// Scroll curve to field with error.
+  final Curve scrollToFieldCurve;
 
   @override
   EasyFormState createState() => EasyFormState();
@@ -328,7 +336,8 @@ class EasyFormState extends State<EasyForm> {
 
     for (final EasyFormFieldState<dynamic> field in _fields) {
       if (errors != null && errors!.containsKey(field.name)) {
-        if (errorField == null) errorField = field;
+        final bool hasError = errors![field.name]?.isNotEmpty ?? false;
+        if (hasError && errorField == null) errorField = field;
 
         field._setErrorText(errors![field.name], silent: true);
       } else {
@@ -465,8 +474,8 @@ class EasyFormState extends State<EasyForm> {
     position.ensureVisible(
       object,
       alignment: alignment,
-      duration: const Duration(milliseconds: 300),
-      curve: Curves.linear,
+      duration: widget.scrollToFieldDuration,
+      curve: widget.scrollToFieldCurve,
     );
   }
 

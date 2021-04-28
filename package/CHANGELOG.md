@@ -1,3 +1,7 @@
+## 2.3.1
+
+* Added settings for scrolling to the error field.
+
 ## 2.3.0
 
 * Added scrolling to the first error field.
