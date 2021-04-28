@@ -1,4 +1,4 @@
-## 2.2.0
+## 2.2.0+1
 
 * Added `EasyFormFieldError` widget to display an error in a field. Convenient for use with custom fields.
 * The `EasyFormState.setErrors(newErrors)` method now accepts null as the error text in the newErrors.

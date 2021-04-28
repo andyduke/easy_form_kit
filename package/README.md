@@ -10,7 +10,20 @@ The form can be saved with the `EasyFormSaveButton` or by calling `EasyForm.of(c
 
 To insert a text field, the `EasyTextFormField` widget is used, for other fields, you can use the `EasyCustomFormField` widget directly in the widget tree or create its inheritor.
 
-### Example
+## Table of Contents
+
+- [Example](#example)
+- [Data processing](#data-processing)
+- [Error handling](#error-handling)
+  - [Custom error display](#custom-error-display)
+- [Custom fields](#custom-fields)
+  - [Stateful custom field](#stateful-custom-field)
+- [Form buttons](#form-buttons)
+  - [Button customization](#button-customization)
+    - [Process of saving a form](#process-of-saving-a-form)
+- [Form saving indicator](#form-saving-indicator)
+
+## Example
 
 This example shows a `EasyForm` with two `EasyTextFormField` to enter an username, password and an `EasyFormSaveButton` to submit the form. The values ​​of the form fields are passed to the hypothetical API client, the result of the API request is passed to `onSaved`. While waiting for the API client to finish, the `EasyFormSaveButton`
 displays a `CircularProgressIndicator`.
@@ -163,6 +176,86 @@ class SampleFormPage extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
+          EasyTextFormField(
+            name: 'username',
+            decoration: const InputDecoration(
+              hintText: 'Enter your username',
+            ),
+            validator: (value) {
+              if (value.isEmpty) {
+                return 'Please enter some text';
+              }
+              return null;
+            },
+          ),
+          const SizedBox(height: 16.0),
+          EasyTextFormField(
+            name: 'password',
+            decoration: const InputDecoration(
+              hintText: 'Enter your password',
+            ),
+            validator: (value) {
+              if (value.isEmpty) {
+                return 'Please enter some text';
+              }
+              return null;
+            },
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 24.0),
+            child: EasyFormSaveButton.text('Sign In'),
+          ),
+        ],
+      ),
+    );
+  }
+}
+```
+
+### Custom error display
+
+For non-standard display of errors, or for displaying an error elsewhere in the layout, you can use the `EasyFormFieldError` widget.
+
+For example, in the following example, the error message is displayed below a layout that contains a custom field:
+```dart
+class CustomErrorDisplayPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return EasyForm(
+      onSave: (values, form) async {
+        return {
+          'file': 'Invalid file.',
+        };
+      },
+      onSaved: (response, values, form) {
+        if (response != null) {
+          form.setErrors(response);
+        }
+      },
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Row(
+            children: [
+              // Custom form field.
+              DocumentFormField(
+                name: 'file',
+              ),
+              const SizedBox(width: 16),
+              Text('Document to upload.'),
+            ],
+          ),
+
+          // An error message will be displayed here.
+          EasyFormFieldError(
+            name: 'file',
+            textStyle: TextStyle(color: Colors.red),
+          ),
+
+          const Divider(
+            height: 24,
+          ),
+
           EasyTextFormField(
             name: 'username',
             decoration: const InputDecoration(
