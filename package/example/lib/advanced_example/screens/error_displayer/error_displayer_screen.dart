@@ -75,6 +75,15 @@ class ErrorDisplayerScreen extends StatelessWidget {
                         return null;
                       },
                     ),
+
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 24),
+                      child: Text(
+                        'Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Sed dapibus, ante ultricies adipiscing pulvinar, enim tellus volutpat odio, vel pretium ligula purus vel ligula. In posuere justo eget libero. Cras consequat quam sit amet metus. Sed vitae nulla. Cras imperdiet sapien vitae ipsum. Curabitur tristique. Aliquam non tellus eget sem commodo tincidunt. Phasellus cursus nunc. Integer vel mi. Aenean rutrum libero sit amet enim. Nunc elementum, erat eu volutpat ultricies, eros justo scelerisque leo, quis sollicitudin purus ipsum at purus. Aenean ut nulla.\n\n'
+                        'Donec sit amet nisl in elit consequat vehicula. Ut leo ligula, lacinia vitae, tempor vel, eleifend vitae, odio. Cras aliquet dolor a justo. Ut molestie ornare sem. Sed est augue, euismod sed, ultrices suscipit, commodo a, nibh. Sed non sem vel mi pretium adipiscing. Nam nec sem. Quisque vel eros euismod odio convallis tincidunt. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Integer a est ut turpis adipiscing eleifend. Cras feugiat mollis metus. Nulla facilisi. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Vivamus vitae leo. In a tortor. Nunc odio. Etiam hendrerit diam at diam. Nullam ac diam nec neque fringilla faucibus.',
+                      ),
+                    ),
+
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 24.0),
                       child: Row(

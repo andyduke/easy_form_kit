@@ -1,3 +1,7 @@
+## 2.3.0
+
+* Added scrolling to the first error field.
+
 ## 2.2.0+1
 
 * Added `EasyFormFieldError` widget to display an error in a field. Convenient for use with custom fields.

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 
 /// Enumeration of the modes of adaptability of form elements
 enum EasyFormAdaptivity {
@@ -323,13 +324,19 @@ class EasyFormState extends State<EasyForm> {
   void setErrors(Map<String, String?>? newErrors) {
     errors = newErrors;
 
+    EasyFormFieldState? errorField;
+
     for (final EasyFormFieldState<dynamic> field in _fields) {
       if (errors != null && errors!.containsKey(field.name)) {
+        if (errorField == null) errorField = field;
+
         field._setErrorText(errors![field.name], silent: true);
       } else {
         field._setErrorText(null, silent: true);
       }
     }
+
+    _focusField(errorField);
 
     _forceRebuild();
   }
@@ -407,9 +414,7 @@ class EasyFormState extends State<EasyForm> {
     _forceRebuild();
     final EasyFormFieldState<dynamic>? errorField = _validate();
 
-    if (errorField != null) {
-      errorField.focus();
-    }
+    _focusField(errorField);
 
     return errorField == null;
   }
@@ -423,6 +428,46 @@ class EasyFormState extends State<EasyForm> {
       }
     }
     return errorField;
+  }
+
+  Future<void> _focusField(EasyFormFieldState? field) async {
+    if (field == null) return;
+
+    await _scrollToField(field);
+    field.focus();
+  }
+
+  Future<void> _scrollToField(EasyFormFieldState field) async {
+    final ScrollableState? scrollableState = Scrollable.of(context);
+    if (scrollableState == null) return;
+
+    final RenderObject? object = context.findRenderObject();
+    if (object == null) return;
+
+    final RenderAbstractViewport? viewport = RenderAbstractViewport.of(object);
+    if (viewport == null) return;
+
+    ScrollPosition position = scrollableState.position;
+    double alignment;
+
+    if (position.pixels > viewport.getOffsetToReveal(object, 0.0).offset) {
+      // Move down to the top of the viewport
+      alignment = 0.0;
+    } else if (position.pixels <
+        viewport.getOffsetToReveal(object, 1.0).offset) {
+      // Move up to the bottom of the viewport
+      alignment = 1.0;
+    } else {
+      // No scrolling is necessary to reveal the child
+      return;
+    }
+
+    position.ensureVisible(
+      object,
+      alignment: alignment,
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.linear,
+    );
   }
 
   /// Returns [EasyFormFieldState] for the field named `name`,
