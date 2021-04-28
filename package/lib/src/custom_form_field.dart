@@ -110,12 +110,14 @@ class EasyCustomFormField<T, C extends ValueNotifier>
     EasyFormFieldValidator<T?>? validator,
     bool enabled = true,
     EasyAutovalidateMode autovalidateMode = EasyAutovalidateMode.disabled,
-  })  : assert(initialValue == null || controller == null),
-        super(
+  }) : super(
           key: key,
           name: name,
-          initialValue:
-              controller != null ? controller.value : (initialValue ?? null),
+          initialValue: controller != null
+              ? ((valueGet != null)
+                  ? valueGet.call(controller)
+                  : controller.value)
+              : (initialValue ?? null),
           onSaved: onSaved,
           validator: validator,
           enabled: enabled,
@@ -193,15 +195,16 @@ class EasyCustomFormField<T, C extends ValueNotifier>
   /// By default, it calls the `controllerRebuilder` callback or,
   /// if not defined, it calls the `controllerBuilder`.
   /// Can be overridden in a descendant for custom implementation.
-  C recreateController(C oldController) =>
-      controllerRebuilder?.call(oldController) ??
-      controllerBuilder(oldController.value);
+  C recreateController(C oldController) => (controllerRebuilder != null)
+      ? controllerRebuilder!.call(oldController)
+      : controllerBuilder(oldController.value);
 
   /// Getter, to get the value from the controller.
   ///
   /// By default, it calls the `valueGet` callback, if not defined,
   /// it returns the controller's `value` property.
-  T? valueOf(C controller) => valueGet?.call(controller) ?? controller.value;
+  T? valueOf(C controller) =>
+      (valueGet != null) ? valueGet!.call(controller) : controller.value;
 
   /// Setter, to set the controller value.
   ///

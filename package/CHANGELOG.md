@@ -1,3 +1,8 @@
+## 2.1.1
+
+* Fixed bug in `EasyCustomFormField` when returning null in `valueGet`.
+* Fixed bug in `EasyTextFormField` using external controller.
+
 ## 2.1.0+1
 
 * The `errors` property has been added to `EasyForm` and the `setErrors` method has been added to `EasyFormState`, for the ability to set errors in some fields, for example, received through the API.
