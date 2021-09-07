@@ -116,6 +116,7 @@ class _FieldsErrorsScreenState extends State<FieldsErrorsScreen> {
     );
   }
 
+  /*
   Future<void> _alert(BuildContext context, String text) async {
     return showDialog(
       context: context,
@@ -125,4 +126,5 @@ class _FieldsErrorsScreenState extends State<FieldsErrorsScreen> {
       ),
     );
   }
+  */
 }

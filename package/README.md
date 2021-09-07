@@ -84,9 +84,20 @@ Widget build(BuildContext context) {
 
 ## Data processing
 
+**EasyForm**
+
 During the save of the form, the values from all fields are collected into the `Map<String, dynamic>` and passed to the `onSave` callback.
 
 The `onSave` callback is asynchronous, you can save or send values in it, wait for the response and pass it on to `onSaved`. If `onSave` returns nothing, a map with the values of the form fields will be passed to `onSaved`.
+
+**EasyDataForm<T>**
+
+Unlike `EasyForm`, in `EasyDataForm<T>` the result returned by the `onSave` callback must be of the type (`T`) specified when the `EasyDataForm<T>` was instantiated.
+
+Also, `EasyDataForm<T>` has a different way of handling the result of the `onSave` callback:
+- **EasyForm** passes the result from the `onSave` callback to the `onSaved` callback. If the `onSave` result is `null` *(`onSave` returned `null` or `onSave` was not specified)* — instead of the `onSave` result, a map with the values of the form fields will be passed.
+- **EasyDataForm** always passes only the result returned by the `onSave` callback to the `onSaved` callback, or `null` if `onSave` was not specified.
+
 
 ## Error handling
 

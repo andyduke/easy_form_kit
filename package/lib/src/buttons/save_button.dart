@@ -180,6 +180,7 @@ class EasyFormSaveButton extends EasyFormActionButton {
       default:
         indicator = CircularProgressIndicator(
           strokeWidth: 2,
+          color: color,
         );
         break;
     }

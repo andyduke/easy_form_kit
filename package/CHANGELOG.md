@@ -1,3 +1,8 @@
+## 3.0.0
+
+* Added a new widget - `EasyDataForm`, in which the way of handling the result of the `onSave` callback has been changed.
+* Fixed default indicator color on `EasyFormSaveButton`.
+
 ## 2.3.1
 
 * Added settings for scrolling to the error field.

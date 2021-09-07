@@ -103,21 +103,28 @@ enum EasyFormAdaptivity {
 ///    an indicator while the values ​​are processed in `onSave`.
 ///
 class EasyForm extends StatefulWidget {
+  static const EasyFormAdaptivity defaultAdaptivity = EasyFormAdaptivity.auto;
+  static const EasyAutovalidateMode defaultAutovalidateMode =
+      EasyAutovalidateMode.disabled;
+  static const Duration defaultScrollToFieldDuration =
+      const Duration(milliseconds: 300);
+  static const Curve defaultScrollToFieldCurve = Curves.easeOut;
+
   /// Creates a container for form fields.
   ///
   /// The [child] argument must not be null.
   const EasyForm({
     Key? key,
     required this.child,
-    this.adaptivity = EasyFormAdaptivity.auto,
+    this.adaptivity = defaultAdaptivity,
     this.onWillPop,
     this.onChanged,
     this.onSave,
     this.onSaved,
-    this.autovalidateMode = EasyAutovalidateMode.disabled,
+    this.autovalidateMode = defaultAutovalidateMode,
     this.errors,
-    this.scrollToFieldDuration = const Duration(milliseconds: 300),
-    this.scrollToFieldCurve = Curves.easeOut,
+    this.scrollToFieldDuration = defaultScrollToFieldDuration,
+    this.scrollToFieldCurve = defaultScrollToFieldCurve,
   }) : super(key: key);
 
   /// Returns the closest [EasyFormState] which encloses the given context.
@@ -174,11 +181,11 @@ class EasyForm extends StatefulWidget {
   /// The callback is asynchronous, for example, you can pass the form data to
   /// the API and wait for the result of the request, the result can be returned
   /// and it will be passed to `onSaved`.
-  final EasyFormFieldSaveCallback? onSave;
+  final EasyFormFieldSaveCallback<dynamic>? onSave;
 
   /// Called after the `onSave` callback completes, the result from `onSave`
   /// is passed to `onSaved` as a parameter.
-  final EasyFormFieldSavedCallback? onSaved;
+  final EasyFormFieldSavedCallback<dynamic>? onSaved;
 
   /// Used to enable/disable form fields auto validation and update their error
   /// text.
@@ -361,6 +368,12 @@ class EasyFormState extends State<EasyForm> {
     return values;
   }
 
+  @protected
+  Future<void> doSave(Map<String, dynamic> values) async {
+    final dynamic data = await widget.onSave?.call(values, this);
+    widget.onSaved?.call(data ?? values, values, this);
+  }
+
   /// Validate & saves every [EasyFormField] that is a descendant of this [EasyForm].
   Future<bool> save() async {
     if (!validate()) return false;
@@ -374,8 +387,7 @@ class EasyFormState extends State<EasyForm> {
 
     _isSaving.value = true;
     try {
-      final dynamic data = await widget.onSave?.call(values, this);
-      widget.onSaved?.call(data ?? values, values, this);
+      await doSave(values);
     } finally {
       _isSaving.value = false;
     }
@@ -496,7 +508,7 @@ class _FormScope extends InheritedWidget {
     required Widget child,
     required EasyFormState formState,
     required int generation,
-  })   : _formState = formState,
+  })  : _formState = formState,
         _generation = generation,
         super(key: key, child: child);
 
@@ -518,7 +530,7 @@ class _FormScope extends InheritedWidget {
 /// A map with all the values of the form fields is passed as a parameter.
 /// All fields [EasyFormField], [EasyFormTextField], etc. have a mandatory
 /// `name` parameter, which is used as the name of the field in the map.
-typedef EasyFormFieldSaveCallback = Future<dynamic> Function(
+typedef EasyFormFieldSaveCallback<T> = Future<T> Function(
     Map<String, dynamic> values, EasyFormState form);
 
 /// Signature for saved callback.
@@ -526,8 +538,8 @@ typedef EasyFormFieldSaveCallback = Future<dynamic> Function(
 /// Called after the `onSave` callback completes, the result from `onSave`
 /// is passed to `onSaved` as the first parameter and the map with all the values
 /// of the form fields is passed as the second parameter.
-typedef EasyFormFieldSavedCallback = void Function(
-    dynamic values, Map<String, dynamic> fieldValues, EasyFormState form);
+typedef EasyFormFieldSavedCallback<T> = void Function(
+    T values, Map<String, dynamic> fieldValues, EasyFormState form);
 
 /// Signature for the callback when the field changes.
 typedef EasyFormChangeCallback = void Function(

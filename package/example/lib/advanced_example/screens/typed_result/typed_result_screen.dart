@@ -1,9 +1,44 @@
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:easy_form_kit/easy_form_kit.dart';
 
-class ClearValueScreen extends StatelessWidget {
-  final TextEditingController usernameController =
-      TextEditingController(text: '');
+class UserInfo {
+  final String firstName;
+  final String lastName;
+
+  String get name => '$firstName $lastName';
+
+  UserInfo({
+    required this.firstName,
+    required this.lastName,
+  });
+}
+
+class TypedResultDemoScreen extends StatelessWidget {
+  Future<UserInfo?> _save(
+      BuildContext context, Map<String, dynamic> values, formState) async {
+    return Future.delayed(const Duration(seconds: 3), () {
+      final bool randomValue =
+          math.Random(DateTime.now().millisecondsSinceEpoch).nextBool();
+
+      if (!randomValue) {
+        _alert(context, 'Save error');
+        return null;
+      } else {
+        return UserInfo(
+          firstName: values['first_name'],
+          lastName: values['last_name'],
+        );
+      }
+    });
+  }
+
+  void _saved(BuildContext context, UserInfo? user,
+      Map<String, dynamic> fieldValues, formState) {
+    if (user != null) {
+      _alert(context, '${user.name}', title: 'Saved');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -12,27 +47,19 @@ class ClearValueScreen extends StatelessWidget {
         child: Center(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
-            child: EasyForm(
-              onSave: (values, form) async {
-                await Future.delayed(const Duration(seconds: 1));
-                return true;
-              },
-              onSaved: (response, values, form) {
-                _alert(context, 'Saved');
-              },
+            child: EasyDataForm<UserInfo?>(
+              onSave: (values, form) => _save(context, values, form),
+              onSaved: (user, values, form) =>
+                  _saved(context, user, values, form),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   EasyTextFormField(
-                    controller: usernameController,
-                    name: 'username',
-                    decoration: InputDecoration(
-                      hintText: 'Enter your username',
-                      suffixIcon: IconButton(
-                        icon: Icon(Icons.clear),
-                        onPressed: () => usernameController.clear(),
-                      ),
+                    name: 'first_name',
+                    saveOnSubmit: true,
+                    decoration: const InputDecoration(
+                      hintText: 'Enter your first name',
                     ),
                     validator: (value, [values]) {
                       if (value?.isEmpty ?? true) {
@@ -43,11 +70,11 @@ class ClearValueScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 16.0),
                   EasyTextFormField(
-                    name: 'password',
+                    name: 'last_name',
+                    saveOnSubmit: true,
                     decoration: const InputDecoration(
-                      hintText: 'Enter your password',
+                      hintText: 'Enter your last name',
                     ),
-                    obscureText: true,
                     validator: (value, [values]) {
                       if (value?.isEmpty ?? true) {
                         return 'Please enter some text';
@@ -59,7 +86,7 @@ class ClearValueScreen extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(vertical: 24.0),
                     child: Row(
                       children: [
-                        EasyFormSaveButton.text('Sign In'),
+                        EasyFormSaveButton.text('Save'),
                         const SizedBox(width: 24),
                         TextButton(
                           child: Text('Back'),
@@ -78,11 +105,11 @@ class ClearValueScreen extends StatelessWidget {
   }
 
   Future<void> _alert(BuildContext context, String text,
-      {String? title}) async {
+      {String title = 'Error'}) async {
     return showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: (title != null) ? Text(title) : null,
+        title: Text(title),
         content: Text(text),
         actions: [
           TextButton(
