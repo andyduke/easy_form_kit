@@ -500,6 +500,12 @@ class EasyFormState extends State<EasyForm> {
         );
     return field;
   }
+
+  /// Returns error text for the field named `name`,
+  /// if no such field is found or there is no error in the field, returns null.
+  String? fieldError(String name) {
+    return errors?[name];
+  }
 }
 
 class _FormScope extends InheritedWidget {

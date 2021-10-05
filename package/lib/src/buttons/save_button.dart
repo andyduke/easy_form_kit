@@ -190,7 +190,7 @@ class EasyFormSaveButton extends EasyFormActionButton {
       height: size.height,
       child: Theme(
         data: theme.copyWith(
-          accentColor: color,
+          colorScheme: theme.colorScheme.copyWith(secondary: color),
         ),
         child: indicator,
       ),

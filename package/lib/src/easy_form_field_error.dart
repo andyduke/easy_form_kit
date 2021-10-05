@@ -56,8 +56,7 @@ class EasyFormFieldError extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final form = EasyForm.of(context);
-    final field = form?.fieldByName(name);
-    final errorText = field?.errorText;
+    final errorText = form?.fieldError(name);
 
     return DefaultTextStyle.merge(
       style: textStyle,

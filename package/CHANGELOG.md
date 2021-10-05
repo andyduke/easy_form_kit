@@ -1,3 +1,7 @@
+## 3.0.1
+
+* `EasyFormFieldError`: fixed error displaying error message in a field.
+
 ## 3.0.0
 
 * Added a new widget - `EasyDataForm`, in which the way of handling the result of the `onSave` callback has been changed.
