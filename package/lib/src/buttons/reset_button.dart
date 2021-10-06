@@ -22,12 +22,14 @@ class EasyFormResetButton extends EasyFormActionButton {
     EasyFormActionButtonBuilder? builder,
     EdgeInsetsGeometry padding = EasyFormActionButton.kPadding,
     Alignment alignment = Alignment.center,
+    bool enabled = true,
   }) : super(
           key: key,
           child: child,
           builder: builder,
           padding: padding,
           alignment: alignment,
+          enabled: enabled,
         );
 
   /// Creates a widget that creates a form reset button with text as a child.
@@ -36,12 +38,14 @@ class EasyFormResetButton extends EasyFormActionButton {
     EasyFormActionButtonBuilder? builder,
     EdgeInsetsGeometry padding = EasyFormActionButton.kPadding,
     Alignment alignment = Alignment.center,
+    bool enabled = true,
   }) {
     return EasyFormResetButton(
       child: Text(text),
       builder: builder,
       padding: padding,
       alignment: alignment,
+      enabled: enabled,
     );
   }
 
@@ -63,8 +67,13 @@ class EasyFormResetButton extends EasyFormActionButton {
   /// you create a widget.
   static EasyFormActionButtonBuilder defaultBuilder = _defaultBuilder;
 
-  static Widget _defaultBuilder(BuildContext context, Key? key, Widget child,
-      VoidCallback onPressed, EasyFormAdaptivity adaptivity) {
+  static Widget _defaultBuilder(
+    BuildContext context,
+    Key? key,
+    Widget child,
+    VoidCallback? onPressed,
+    EasyFormAdaptivity adaptivity,
+  ) {
     switch (adaptivity) {
       case EasyFormAdaptivity.cupertino:
         return CupertinoButton(

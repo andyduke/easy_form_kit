@@ -40,6 +40,7 @@ class EasyFormSaveButton extends EasyFormActionButton {
     EdgeInsetsGeometry padding = EasyFormActionButton.kPadding,
     Alignment alignment = Alignment.center,
     EasyFormSaveButtonLayoutBuilder? layoutBuilder,
+    bool enabled = true,
   })  : _indicatorBuilder = indicatorBuilder,
         _layoutBuilder = layoutBuilder,
         super(
@@ -48,6 +49,7 @@ class EasyFormSaveButton extends EasyFormActionButton {
           builder: builder,
           padding: padding,
           alignment: alignment,
+          enabled: enabled,
         );
 
   /// Creates a widget that creates a form save button with text as a child.
@@ -59,6 +61,7 @@ class EasyFormSaveButton extends EasyFormActionButton {
     EdgeInsetsGeometry padding = EasyFormActionButton.kPadding,
     Alignment alignment = Alignment.center,
     EasyFormSaveButtonLayoutBuilder? layoutBuilder,
+    bool enabled = true,
   }) {
     return EasyFormSaveButton(
       child: Text(text),
@@ -68,6 +71,7 @@ class EasyFormSaveButton extends EasyFormActionButton {
       padding: padding,
       alignment: alignment,
       layoutBuilder: layoutBuilder,
+      enabled: enabled,
     );
   }
 

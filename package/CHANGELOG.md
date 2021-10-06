@@ -1,3 +1,8 @@
+## 4.0.0
+
+* Added the enabled property to the buttons: `EasyFormActionButton`, `EasyFormSaveButton`, `EasyFormResetButton`.
+* **Breaking changes:** The signature of `EasyFormActionButtonBuilder` has been changed, the `onPressed` parameter is now *nullable*.
+
 ## 3.0.1
 
 * `EasyFormFieldError`: fixed error displaying error message in a field.
