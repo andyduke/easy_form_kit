@@ -1,3 +1,7 @@
+## 4.1.0
+
+* Fixed an error: FocusNode parameter was not passed to EasyTextFormField and EasyCustomFormField.
+
 ## 4.0.0
 
 * Added the enabled property to the buttons: `EasyFormActionButton`, `EasyFormSaveButton`, `EasyFormResetButton`.

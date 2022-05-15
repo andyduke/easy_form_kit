@@ -99,6 +99,7 @@ class EasyCustomFormField<T, C extends ValueNotifier>
     Key? key,
     required String name,
     this.controller,
+    FocusNode? focusNode,
     T? initialValue,
     required this.controllerBuilder,
     this.controllerRebuilder,
@@ -113,6 +114,7 @@ class EasyCustomFormField<T, C extends ValueNotifier>
   }) : super(
           key: key,
           name: name,
+          focusNode: focusNode,
           initialValue: controller != null
               ? ((valueGet != null)
                   ? valueGet.call(controller)

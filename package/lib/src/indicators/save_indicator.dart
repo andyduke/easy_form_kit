@@ -1,7 +1,6 @@
 import 'package:easy_form_kit/src/easy_form.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 /// Signature for the save indicator builder
 typedef EasyFormSaveIndicatorBuilder = Widget Function(

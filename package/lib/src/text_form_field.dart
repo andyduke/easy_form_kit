@@ -123,6 +123,7 @@ class EasyTextFormField
           key: key,
           name: name,
           controller: controller,
+          focusNode: focusNode,
           initialValue: initialValue ?? '',
           controllerBuilder: (value) => TextEditingController(text: value),
           controllerRebuilder: (oldController) =>
