@@ -1,6 +1,6 @@
 name: easy_form_kit
 description: A set of widgets for processing form field data in one common handler. Convenient for saving data to a database, sending via API, etc.
-version: 5.0.0
+version: 5.0.0+1
 author: Andy Chentsov <chentsov@gmail.com>
 homepage: https://github.com/andyduke/easy_form_kit/tree/master/package
 repository: https://github.com/andyduke/easy_form_kit

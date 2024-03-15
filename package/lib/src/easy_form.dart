@@ -444,7 +444,9 @@ class EasyFormState extends State<EasyForm> {
   /// If the form's [EasyForm.autovalidateMode] property is [EasyAutovalidateMode.always],
   /// the fields will all be revalidated after being reset.
   void reset() {
-    for (final EasyFormFieldState<dynamic> field in _fields) field.resetValue();
+    for (final EasyFormFieldState<dynamic> field in _fields) {
+      field.resetValue();
+    }
     _hasInteractedByUser = false;
     _fieldDidChange(null);
   }

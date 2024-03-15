@@ -1,4 +1,4 @@
-## 5.0.0
+## 5.0.0+1
 
 * Added a new way to set default builders for button and indicator widgets - `EasyFormDefaultSettings`.
 * Added compatibility with Material You.
