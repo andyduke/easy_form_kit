@@ -3,13 +3,14 @@ import 'package:easy_form_kit/easy_form_kit.dart';
 import 'package:easy_form_example/advanced_example/screens/logged/logged_screen.dart';
 
 class FieldsErrorsScreen extends StatefulWidget {
+  const FieldsErrorsScreen({super.key});
+
   @override
-  _FieldsErrorsScreenState createState() => _FieldsErrorsScreenState();
+  FieldsErrorsScreenState createState() => FieldsErrorsScreenState();
 }
 
-class _FieldsErrorsScreenState extends State<FieldsErrorsScreen> {
+class FieldsErrorsScreenState extends State<FieldsErrorsScreen> {
   Map<String, String>? errors;
-  // final GlobalKey<EasyFormState> _formKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +60,7 @@ class _FieldsErrorsScreenState extends State<FieldsErrorsScreen> {
                 if (response) {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => LoggedScreen(),
+                      builder: (context) => const LoggedScreen(),
                     ),
                   );
                 }
@@ -101,7 +102,7 @@ class _FieldsErrorsScreenState extends State<FieldsErrorsScreen> {
                         EasyFormSaveButton.text('Sign In'),
                         const SizedBox(width: 24),
                         TextButton(
-                          child: Text('Back'),
+                          child: const Text('Back'),
                           onPressed: () => Navigator.of(context).pop(),
                         ),
                       ],
@@ -115,16 +116,4 @@ class _FieldsErrorsScreenState extends State<FieldsErrorsScreen> {
       ),
     );
   }
-
-  /*
-  Future<void> _alert(BuildContext context, String text) async {
-    return showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text('Error'),
-        content: Text(text),
-      ),
-    );
-  }
-  */
 }

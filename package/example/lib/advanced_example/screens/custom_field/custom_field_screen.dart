@@ -5,6 +5,8 @@ import 'package:easy_form_example/advanced_example/screens/custom_field/widgets/
 class CustomFieldScreen extends StatelessWidget {
   final ValueNotifier<Color?> color = ValueNotifier(Colors.teal);
 
+  CustomFieldScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,7 +26,7 @@ class CustomFieldScreen extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
                     // Color field
-                    Text('Press the circle to choose a random color'),
+                    const Text('Press the circle to choose a random color'),
                     const SizedBox(height: 16),
                     ColorFormField(
                       name: 'color',
@@ -37,7 +39,7 @@ class CustomFieldScreen extends StatelessWidget {
                           EasyFormSaveButton.text('Preview'),
                           const SizedBox(width: 24),
                           TextButton(
-                            child: Text('Back'),
+                            child: const Text('Back'),
                             onPressed: () => Navigator.of(context).pop(),
                           ),
                         ],
@@ -49,7 +51,7 @@ class CustomFieldScreen extends StatelessWidget {
 
                     // Color preview
                     const SizedBox(height: 24),
-                    Text('Color preview'),
+                    const Text('Color preview'),
                     const SizedBox(height: 16),
                     ValueListenableBuilder(
                       valueListenable: color,
@@ -59,7 +61,7 @@ class CustomFieldScreen extends StatelessWidget {
                         decoration: BoxDecoration(
                           color: colorValue,
                           borderRadius: BorderRadius.circular(3),
-                          boxShadow: [
+                          boxShadow: const [
                             BoxShadow(
                               blurRadius: 10,
                               color: Colors.black26,

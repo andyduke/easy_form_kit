@@ -5,15 +5,12 @@ import 'package:easy_form_example/advanced_example/screens/custom_field/widgets/
 
 class ColorFormField extends EasyCustomFormField<Color?, ColorController> {
   ColorFormField({
-    Key? key,
-    required String name,
-    ColorController? controller,
+    super.key,
+    required super.name,
+    super.controller,
     Color? initialValue,
   }) : super(
-          key: key,
-          name: name,
-          controller: controller,
-          initialValue: initialValue ?? Color(0x00000000),
+          initialValue: initialValue ?? const Color(0x00000000),
           controllerBuilder: (value) => ColorController(value),
           builder: (state, onChangedHandler) {
             return ColorField(

@@ -9,23 +9,28 @@ extension StringNullEmptyChecks on String? {
 }
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'EasyForm Example',
       theme: ThemeData(
-        primarySwatch: Colors.teal,
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.teal),
+        useMaterial3: true,
       ),
-      home: ExampleScreen(),
+      home: const ExampleScreen(),
     );
   }
 }
 
 class ExampleScreen extends StatelessWidget {
+  const ExampleScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,7 +52,7 @@ class ExampleScreen extends StatelessWidget {
                 } else {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => LoggedScreen(),
+                      builder: (context) => const LoggedScreen(),
                     ),
                   );
                 }
@@ -99,7 +104,7 @@ class ExampleScreen extends StatelessWidget {
     return showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Error'),
+        title: const Text('Error'),
         content: Text(text),
       ),
     );
@@ -107,6 +112,8 @@ class ExampleScreen extends StatelessWidget {
 }
 
 class LoggedScreen extends StatelessWidget {
+  const LoggedScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -115,10 +122,10 @@ class LoggedScreen extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text('Welcome, John.'),
+              const Text('Welcome, John.'),
               const SizedBox(height: 24),
               TextButton(
-                child: Text('Back'),
+                child: const Text('Back'),
                 onPressed: () => Navigator.of(context).pop(),
               ),
             ],

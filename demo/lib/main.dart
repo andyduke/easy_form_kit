@@ -60,9 +60,9 @@ class _DemoButton extends StatelessWidget {
   final WidgetBuilder builder;
 
   const _DemoButton({
-    Key key,
-    @required this.text,
-    @required this.builder,
+    Key? key,
+    required this.text,
+    required this.builder,
   }) : super(key: key);
 
   @override

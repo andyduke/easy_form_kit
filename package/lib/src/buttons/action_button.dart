@@ -1,6 +1,7 @@
+import 'package:easy_form_kit/src/easy_form_default_settings.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import '../easy_form.dart';
+import 'package:easy_form_kit/src/easy_form.dart';
 
 /// Signature to invoke button action
 typedef EasyFormButtonAction = void Function(
@@ -28,6 +29,10 @@ typedef EasyFormActionButtonBuilder = Widget Function(
 ///
 /// The action when the button is pressed is determined
 /// by the `action` argument.
+///
+/// See also:
+///  * [EasyFormDefaultSettings], where the builder can be set globally.
+///
 class EasyFormActionButton extends StatelessWidget {
   /// Default padding inside a button
   static const EdgeInsetsGeometry kPadding = const EdgeInsets.all(8.0);
@@ -86,14 +91,17 @@ class EasyFormActionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final form = EasyForm.of(context);
+    final form = EasyForm.maybeOf(context);
     if (form == null) return const SizedBox();
 
     return ValueListenableBuilder<bool>(
       valueListenable: form.isSaving,
       builder: (context, isSaving, _) {
         final Widget body = bodyBuilder(context, child, isSaving, form);
-        final Widget button = (builder ?? defaultBuilder).call(
+        final Widget button = (getBuilder(context) ??
+                getDefaultBuilder(context) ??
+                defaultBuilder)
+            .call(
           context,
           key,
           body,
@@ -112,7 +120,12 @@ class EasyFormActionButton extends StatelessWidget {
 
   /// Returns the button builder.
   @protected
-  EasyFormActionButtonBuilder? get builder => _builder;
+  EasyFormActionButtonBuilder? getBuilder(BuildContext context) => _builder;
+
+  /// Returns the button default builder.
+  @protected
+  EasyFormActionButtonBuilder? getDefaultBuilder(BuildContext context) =>
+      EasyFormDefaultSettings.maybeOf(context)?.actionButton?.builder;
 
   /// The default button builder, creates an [ElevatedButton]
   /// or [CupertinoButton.filled].

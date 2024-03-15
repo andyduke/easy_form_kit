@@ -18,6 +18,7 @@ To insert a text field, the `EasyTextFormField` widget is used, for other fields
   - [Custom error display](#custom-error-display)
 - [Custom fields](#custom-fields)
   - [Stateful custom field](#stateful-custom-field)
+- [Customization](#customization)
 - [Form buttons](#form-buttons)
   - [Button customization](#button-customization)
     - [Process of saving a form](#process-of-saving-a-form)
@@ -312,22 +313,18 @@ For text fields, you can use the `EasyTextFormField` widget, which encapsulates 
 As a controller, you can use the generic `EasyFormFieldController` or create an inheritor of it:
 ```dart
 class ColorController extends EasyFormFieldController<Color> {
-  ColorController(Color value) : super(value);
+  ColorController(super.value);
 }
 ```
 
 To create a field, you can create an inheritor of `EasyFormGenericField` and implement its `build` method:
 ```dart
 class ColorField extends EasyFormGenericField<Color> {
-  ColorField({
-    Key key,
-    @required ColorController controller,
-    ValueChanged<Color> onChange,
-  }) : super(
-          key: key,
-          controller: controller,
-          onChange: onChange,
-        );
+  const ColorField({
+    super.key,
+    required ColorController super.controller,
+    super.onChange,
+  });
 
   void _change() {
     value = _getRandomColor();
@@ -370,7 +367,7 @@ EasyCustomFormField<Color, ColorController>(
   initialValue: Colors.teal,
   controllerBuilder: (value) => ColorController(value),
   builder: (fieldState, onChangedHandler) => ColorField(
-    controller: fieldState.controller,
+    controller: fieldState.controller as ColorController,
     onChange: onChangedHandler,
   ),
 ),
@@ -380,19 +377,16 @@ Or create an inheritor of the `EasyCustomFormField` widget:
 ```dart
 class ColorFormField extends EasyCustomFormField<Color, ColorController> {
   ColorFormField({
-    Key key,
-    @required String name,
-    ColorController controller,
-    Color initialValue,
+    super.key,
+    required super.name,
+    super.controller,
+    Color? initialValue,
   }) : super(
-          key: key,
-          name: name,
-          controller: controller,
-          initialValue: initialValue ?? Color(0x00000000),
+          initialValue: initialValue ?? const Color(0x00000000),
           controllerBuilder: (value) => ColorController(value),
           builder: (state, onChangedHandler) {
             return ColorField(
-              controller: state.controller,
+              controller: state.controller as ColorController,
               onChange: onChangedHandler,
             );
           },
@@ -412,15 +406,11 @@ ColorFormField(
 The `EasyFormGenericField` widget is a stateful widget, if you need to store an intermediate state (for example, a link to a photo picker), this is how you can transform the above field code into a stateful widget:
 ```dart
 class ColorField extends EasyFormGenericField<Color> {
-  ColorField({
-    Key key,
-    @required ColorController controller,
-    ValueChanged<Color> onChange,
-  }) : super(
-          key: key,
-          controller: controller,
-          onChange: onChange,
-        );
+  const ColorField({
+    super.key,
+    required ColorController super.controller,
+    super.onChange,
+  });
 
   @override
   ColorFieldState createState() => ColorFieldState();
@@ -459,6 +449,52 @@ class ColorFieldState extends EasyFormGenericFieldState<Color> {
 }
 ```
 
+## Customization
+
+The appearance and layout of the save, reset buttons, save indicators, and error messages can be customized.
+
+You can set the default appearance for all buttons and other widgets using `EasyFormDefaultSettings`. All settings specified in `EasyFormDefaultSettings` will apply to all underlying widgets.
+
+Typically these settings are set in `MaterialApp.builder`:
+```dart
+return MaterialApp(
+  ...
+  builder: (context, child) => EasyFormDefaultSettings(
+    saveButton: EasyFormSaveButtonSettings(
+      builder: (context, key, child, onPressed, adaptivity) =>
+        ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            foregroundColor: Colors.white,
+            backgroundColor: Colors.amber.shade700,
+          ),
+          onPressed: onPressed,
+          child: child ?? const SizedBox.shrink(),
+        ),
+    ),
+  ),
+  ...
+);
+```
+
+This way you can set default settings for:
+- `EasyFormSaveButton`
+  - builder
+  - layoutBuilder
+  - indicatorBuilder
+
+- `EasyFormResetButton`
+  - builder
+
+- `EasyFormActionButton`
+  - builder
+
+- `EasyFormSaveIndicator`
+  - builder
+  - layoutBuilder
+
+- `EasyFormFieldError`
+  - builder
+
 ## Form buttons
 
 For convenience, `EasyForm` has three types of buttons:
@@ -495,14 +531,7 @@ EasyFormSaveButton.text(
   ),
 ),
 ```
-... or redefine globally, for the entire application (except for those buttons where the builder is passed to the constructor):
-```dart
-EasyFormSaveButton.defaultBuilder = (context, key, child, onPressed) => ElevatedButton(
-  key: key,
-  child: child,
-  onPressed: onPressed,
-);
-```
+... or redefine globally, for the entire application (except for those buttons where the builder is passed to the constructor) using [EasyFormDefaultSettings](#customization).
 
 #### Process of saving a form
 
@@ -523,15 +552,7 @@ EasyFormSaveButton.text(
 )
 ```
 
-... or redefine globally, for the entire application (except for those buttons where the builder is passed to the constructor):
-```dart
-EasyFormSaveButton.defaultIndicatorBuilder = (context, size) => SizedBox.fromSize(
-  size: size,
-  child: CircularProgressIndicator.adaptive(
-    strokeWidth: 2,
-  ),
-);
-```
+... or redefine globally, for the entire application (except for those buttons where the builder is passed to the constructor) using [EasyFormDefaultSettings](#customization).
 
 ## Form saving indicator
 
@@ -539,4 +560,4 @@ Saving or submitting form data can take a certain amount of time, during which t
 
 By default, this is `CircularProgressIndicator` or `CupertinoActivityIndicator` over the `child` of the widget, but you can override the indicator builder, as well as override the layout builder so that the indicator is not placed on top of the child.
 
-The indicator builder and layout builder can be passed to the `EasyFormSaveIndicator` constructor or assigned globally for the entire application (except for `EasyFormSaveIndicator`, with the specified builder in the constructor) via `EasyFormSaveIndicator.defaultIndicatorBuilder` and `EasyFormSaveIndicator.defaultLayoutBuilder`.
+The indicator builder and layout builder can be passed to the `EasyFormSaveIndicator` constructor or redefine globally for the entire application (except for `EasyFormSaveIndicator`, with the specified builder in the constructor) using [EasyFormDefaultSettings](#customization).

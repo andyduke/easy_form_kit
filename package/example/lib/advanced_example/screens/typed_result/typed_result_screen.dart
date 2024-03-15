@@ -15,6 +15,8 @@ class UserInfo {
 }
 
 class TypedResultDemoScreen extends StatelessWidget {
+  const TypedResultDemoScreen({super.key});
+
   Future<UserInfo?> _save(
       BuildContext context, Map<String, dynamic> values, formState) async {
     return Future.delayed(const Duration(seconds: 3), () {
@@ -36,7 +38,7 @@ class TypedResultDemoScreen extends StatelessWidget {
   void _saved(BuildContext context, UserInfo? user,
       Map<String, dynamic> fieldValues, formState) {
     if (user != null) {
-      _alert(context, '${user.name}', title: 'Saved');
+      _alert(context, user.name, title: 'Saved');
     }
   }
 
@@ -89,7 +91,7 @@ class TypedResultDemoScreen extends StatelessWidget {
                         EasyFormSaveButton.text('Save'),
                         const SizedBox(width: 24),
                         TextButton(
-                          child: Text('Back'),
+                          child: const Text('Back'),
                           onPressed: () => Navigator.of(context).pop(),
                         ),
                       ],
@@ -113,7 +115,7 @@ class TypedResultDemoScreen extends StatelessWidget {
         content: Text(text),
         actions: [
           TextButton(
-            child: Text('OK'),
+            child: const Text('OK'),
             onPressed: () => Navigator.of(context).pop(),
           ),
         ],

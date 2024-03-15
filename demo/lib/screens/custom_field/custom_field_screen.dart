@@ -1,5 +1,5 @@
 import 'package:demo/screens/custom_field/widgets/color_form_field.dart';
-import 'package:easy_form_kit/easy_form.dart';
+import 'package:easy_form_kit/easy_form_kit.dart';
 import 'package:flutter/material.dart';
 
 class CustomFieldScreen extends StatelessWidget {
@@ -13,10 +13,10 @@ class CustomFieldScreen extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
             child: EasyForm(
-              onSave: (values) async {
+              onSave: (values, form) async {
                 return Future.delayed(const Duration(seconds: 2), () => values['color']);
               },
-              onSaved: (newColor) => color.value = newColor,
+              onSaved: (newColor, values, form) => color.value = newColor,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
@@ -57,6 +57,7 @@ class CustomFieldScreen extends StatelessWidget {
     );
   }
 
+  /*
   Future<void> _alert(BuildContext context, String text) async {
     return showDialog(
       context: context,
@@ -66,4 +67,5 @@ class CustomFieldScreen extends StatelessWidget {
       ),
     );
   }
+  */
 }

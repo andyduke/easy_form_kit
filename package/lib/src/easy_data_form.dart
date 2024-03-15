@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'easy_form.dart';
+import 'package:easy_form_kit/src/easy_form.dart';
 
 /// A typed result form to be returned by the `onSave` callback and passed as a parameter to the `onSaved` callback.
 ///
@@ -21,6 +21,8 @@ class EasyDataForm<T> extends EasyForm {
     Key? key,
     required Widget child,
     EasyFormAdaptivity adaptivity = EasyForm.defaultAdaptivity,
+    @Deprecated(
+        'Use PopScope around EasyForm instead. Will be removed in the next major release.')
     WillPopCallback? onWillPop,
     EasyFormChangeCallback? onChanged,
     EasyFormFieldSaveCallback<T>? onSave,

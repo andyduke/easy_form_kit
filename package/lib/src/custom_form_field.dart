@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'easy_form.dart';
+import 'package:easy_form_kit/src/easy_form.dart';
 
 /// Signature for creating a controller.
 typedef CreateControllerCallback<C, T> = C Function(T value);

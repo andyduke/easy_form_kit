@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'controller.dart';
+import 'package:easy_form_kit/src/generic_field/controller.dart';
 
 /// Base class for creating a form field.
 ///

@@ -1,7 +1,8 @@
+import 'package:easy_form_kit/src/easy_form_default_settings.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'action_button.dart';
-import '../easy_form.dart';
+import 'package:easy_form_kit/src/buttons/action_button.dart';
+import 'package:easy_form_kit/src/easy_form.dart';
 
 /// The button builder that, when pressed, clears the data
 /// of the form fields, returning them to their initial values.
@@ -12,8 +13,9 @@ import '../easy_form.dart';
 /// in which you can specify the text on the button.
 ///
 /// See also:
+///  * [EasyFormActionButton], basic widget for [EasyForm] form buttons.
+///  * [EasyFormDefaultSettings], where the builders can be set globally.
 ///
-///  * [EasyFormActionButton], basic widget for EasyForm form buttons.
 class EasyFormResetButton extends EasyFormActionButton {
   /// Creates a widget that creates a form reset button.
   const EasyFormResetButton({
@@ -57,7 +59,10 @@ class EasyFormResetButton extends EasyFormActionButton {
   // Default builder
 
   @override
-  EasyFormActionButtonBuilder get builder => super.builder ?? defaultBuilder;
+  EasyFormActionButtonBuilder getDefaultBuilder(BuildContext context) =>
+      EasyFormDefaultSettings.maybeOf(context)?.resetButton?.builder ??
+      super.getDefaultBuilder(context) ??
+      defaultBuilder;
 
   /// The default button builder, creates an [OutlinedButton]
   /// or [CupertinoButton].

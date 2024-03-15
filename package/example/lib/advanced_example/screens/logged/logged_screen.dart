@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class LoggedScreen extends StatelessWidget {
+  const LoggedScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -9,10 +11,10 @@ class LoggedScreen extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text('Welcome, John.'),
+              const Text('Welcome, John.'),
               const SizedBox(height: 24),
               TextButton(
-                child: Text('Back'),
+                child: const Text('Back'),
                 onPressed: () => Navigator.of(context).pop(),
               ),
             ],

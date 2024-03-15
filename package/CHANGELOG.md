@@ -1,3 +1,10 @@
+## 5.0.0
+
+* Added a new way to set default builders for button and indicator widgets - `EasyFormDefaultSettings`.
+* Added compatibility with Material You.
+* **Breaking change!** The signature of the `EasyForm.of()` method has been changed so that it always returns `EasyFormState` or throws an exception if `EasyForm` is not found in the context. The old version of this method, which returns nullable, has been renamed `EasyForm.maybeOf()`.
+* `EasyForm.onWillPop` has been deprecated and will be removed in the next major release. Use `PopScope` around `EasyForm` instead.
+
 ## 4.1.0
 
 * Fixed an error: FocusNode parameter was not passed to EasyTextFormField and EasyCustomFormField.

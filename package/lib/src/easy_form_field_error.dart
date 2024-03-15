@@ -1,4 +1,5 @@
 import 'package:easy_form_kit/src/easy_form.dart';
+import 'package:easy_form_kit/src/easy_form_default_settings.dart';
 import 'package:flutter/widgets.dart';
 
 /// Signature for the form field error displayer builder
@@ -15,6 +16,9 @@ typedef EasyFormFieldErrorBuilder = Widget Function(
 ///
 /// Must be located inside [EasyForm].
 ///
+/// See also:
+///  * [EasyFormDefaultSettings], where the builders can be set globally.
+///
 class EasyFormFieldError extends StatelessWidget {
   /// The name of the field for which to display the error
   final String name;
@@ -26,6 +30,10 @@ class EasyFormFieldError extends StatelessWidget {
   final TextAlign? textAlign;
 
   /// Widget builder for error display
+  ///
+  /// See also:
+  ///  * [EasyFormDefaultSettings], where the builder can be set globally.
+  ///
   final EasyFormFieldErrorBuilder? builder;
 
   /// Creates an error display widget.
@@ -55,13 +63,16 @@ class EasyFormFieldError extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final form = EasyForm.of(context);
+    final form = EasyForm.maybeOf(context);
     final errorText = form?.fieldError(name);
 
     return DefaultTextStyle.merge(
       style: textStyle,
       textAlign: textAlign,
-      child: (builder ?? defaultBuilder).call(context, name, errorText),
+      child: (builder ??
+              EasyFormDefaultSettings.maybeOf(context)?.error?.builder ??
+              defaultBuilder)
+          .call(context, name, errorText),
     );
   }
 }

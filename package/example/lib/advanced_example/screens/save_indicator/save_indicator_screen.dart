@@ -2,6 +2,8 @@ import 'package:easy_form_kit/easy_form_kit.dart';
 import 'package:flutter/material.dart';
 
 class SaveIndicatorScreen extends StatelessWidget {
+  const SaveIndicatorScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -55,13 +57,13 @@ class SaveIndicatorScreen extends StatelessWidget {
                         children: [
                           EasyFormButton(
                             builder: (context, form) => OutlinedButton(
-                              child: Text('Sign In'),
+                              child: const Text('Sign In'),
                               onPressed: () => form?.save(),
                             ),
                           ),
                           const SizedBox(width: 24),
                           TextButton(
-                            child: Text('Back'),
+                            child: const Text('Back'),
                             onPressed: () => Navigator.of(context).pop(),
                           ),
                         ],
@@ -84,7 +86,7 @@ class SaveIndicatorScreen extends StatelessWidget {
         content: Text(text),
         actions: [
           TextButton(
-            child: Text('OK'),
+            child: const Text('OK'),
             onPressed: () => Navigator.of(context).pop(),
           ),
         ],

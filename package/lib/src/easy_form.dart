@@ -129,16 +129,53 @@ class EasyForm extends StatefulWidget {
 
   /// Returns the closest [EasyFormState] which encloses the given context.
   ///
+  /// Returns null if there is no EasyFormState associated with the given context.
+  ///
+  /// Calling this method will create a dependency on the closest [EasyForm] in the context, if there is one.
+  ///
+  /// Typical usage is as follows:
+  ///
+  /// ```dart
+  /// EasyFormState? form = EasyForm.maybeOf(context);
+  /// form?.save();
+  /// ```
+  static EasyFormState? maybeOf(BuildContext context) {
+    final _FormScope? scope =
+        context.dependOnInheritedWidgetOfExactType<_FormScope>();
+    return scope?._formState;
+  }
+
+  /// Returns the closest [EasyFormState] which encloses the given context.
+  ///
+  /// If no ancestor is found, this method will assert in debug mode, and throw an exception in release mode.
+  ///
+  /// Calling this method will create a dependency on the closest [EasyForm] in the context, if there is one.
+  ///
   /// Typical usage is as follows:
   ///
   /// ```dart
   /// EasyFormState form = EasyForm.of(context);
   /// form.save();
   /// ```
-  static EasyFormState? of(BuildContext context) {
+  static EasyFormState of(BuildContext context) {
     final _FormScope? scope =
         context.dependOnInheritedWidgetOfExactType<_FormScope>();
-    return scope?._formState;
+    assert(() {
+      if (scope == null) {
+        throw FlutterError(
+          'EasyForm.of() was called with a context that does not contain a '
+          'EasyForm widget.\n'
+          'No EasyForm widget ancestor could be found starting from the '
+          'context that was passed to EasyForm.of(). This can happen '
+          'because you are using a widget that looks for a EasyForm '
+          'ancestor, but no such ancestor exists.\n'
+          'The context used was:\n'
+          '  $context',
+        );
+      }
+      return true;
+    }());
+    return scope!._formState;
   }
 
   /// The mode of adaptability of form elements, in which design system
@@ -163,6 +200,8 @@ class EasyForm extends StatefulWidget {
   ///
   ///  * [WillPopScope], another widget that provides a way to intercept the
   ///    back button.
+  @Deprecated(
+      'Use PopScope around EasyForm instead. Will be removed in the next major release.')
   final WillPopCallback? onWillPop;
 
   /// Called when one of the form fields changes.
@@ -322,7 +361,9 @@ class EasyFormState extends State<EasyForm> {
         break;
     }
 
+    // ignore: deprecated_member_use
     return WillPopScope(
+      // ignore: deprecated_member_use_from_same_package
       onWillPop: widget.onWillPop,
       child: _FormScope(
         formState: this,
@@ -459,7 +500,7 @@ class EasyFormState extends State<EasyForm> {
   }
 
   Future<void> _scrollToField(EasyFormFieldState field) async {
-    final ScrollableState? scrollableState = Scrollable.of(context);
+    final ScrollableState? scrollableState = Scrollable.maybeOf(context);
     if (scrollableState == null) return;
 
     final RenderObject? object = context.findRenderObject();
@@ -741,7 +782,7 @@ class EasyFormFieldState<T> extends State<EasyFormField<T?>> {
 
   /// Validate & saves form.
   Future<bool> saveForm() async {
-    return EasyForm.of(context)?.save() ?? Future.value(false);
+    return EasyForm.maybeOf(context)?.save() ?? Future.value(false);
   }
 
   @mustCallSuper
@@ -757,7 +798,7 @@ class EasyFormFieldState<T> extends State<EasyFormField<T?>> {
   /// Resets the field to its initial value.
   void reset() {
     resetValue();
-    EasyForm.of(context)?._fieldDidChange(this);
+    EasyForm.maybeOf(context)?._fieldDidChange(this);
   }
 
   /// Calls [EasyFormField.validator] to set the [errorText]. Returns true if there
@@ -776,7 +817,7 @@ class EasyFormFieldState<T> extends State<EasyFormField<T?>> {
 
   String? _validate([Map<String, dynamic>? values]) {
     if (values == null) {
-      values = EasyForm.of(context)?.values();
+      values = EasyForm.maybeOf(context)?.values();
     }
 
     return _errorText = widget.validator?.call(_value, values);
@@ -793,7 +834,7 @@ class EasyFormFieldState<T> extends State<EasyFormField<T?>> {
       _value = value;
       _hasInteractedByUser = true;
     });
-    EasyForm.of(context)?._fieldDidChange(this);
+    EasyForm.maybeOf(context)?._fieldDidChange(this);
   }
 
   /// Sets the value associated with this form field.
@@ -816,7 +857,7 @@ class EasyFormFieldState<T> extends State<EasyFormField<T?>> {
 
   @override
   void deactivate() {
-    EasyForm.of(context)?._unregister(this);
+    EasyForm.maybeOf(context)?._unregister(this);
     super.deactivate();
   }
 
@@ -836,7 +877,7 @@ class EasyFormFieldState<T> extends State<EasyFormField<T?>> {
           break;
       }
     }
-    EasyForm.of(context)?._register(this);
+    EasyForm.maybeOf(context)?._register(this);
     return widget.builder(this);
   }
 }

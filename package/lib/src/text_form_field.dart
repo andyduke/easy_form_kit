@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'easy_form.dart';
-import 'custom_form_field.dart';
+import 'package:easy_form_kit/src/easy_form.dart';
+import 'package:easy_form_kit/src/custom_form_field.dart';
 
 export 'package:flutter/services.dart' show SmartQuotesType, SmartDashesType;
 
@@ -68,7 +68,7 @@ class EasyTextFormField
   /// to [initialValue] or the empty string.
   ///
   /// For documentation about the various parameters, see the [TextField] class
-  /// and [new TextField], the constructor.
+  /// and [TextField], the constructor.
   EasyTextFormField({
     Key? key,
     required String name,
@@ -86,6 +86,7 @@ class EasyTextFormField
     TextAlignVertical? textAlignVertical,
     bool autofocus = false,
     bool readOnly = false,
+    @Deprecated('Use `contextMenuBuilder` instead.')
     ToolbarOptions? toolbarOptions,
     bool? showCursor,
     String obscuringCharacter = '•',
@@ -117,6 +118,15 @@ class EasyTextFormField
     InputCounterWidgetBuilder? buildCounter,
     ScrollPhysics? scrollPhysics,
     Iterable<String>? autofillHints,
+    ContentInsertionConfiguration? contentInsertionConfiguration,
+    Clip clipBehavior = Clip.hardEdge,
+    String? restorationId,
+    bool scribbleEnabled = true,
+    bool enableIMEPersonalizedLearning = true,
+    EditableTextContextMenuBuilder? contextMenuBuilder,
+    bool canRequestFocus = true,
+    SpellCheckConfiguration? spellCheckConfiguration,
+    TextMagnifierConfiguration? magnifierConfiguration,
     EasyAutovalidateMode autovalidateMode = EasyAutovalidateMode.disabled,
     bool saveOnSubmit = false,
   }) : super(
@@ -147,6 +157,7 @@ class EasyTextFormField
               textDirection: textDirection,
               textCapitalization: textCapitalization,
               autofocus: autofocus,
+              // ignore: deprecated_member_use
               toolbarOptions: toolbarOptions,
               readOnly: readOnly,
               showCursor: showCursor,
@@ -186,6 +197,15 @@ class EasyTextFormField
               enableInteractiveSelection: enableInteractiveSelection,
               buildCounter: buildCounter,
               autofillHints: autofillHints,
+              contentInsertionConfiguration: contentInsertionConfiguration,
+              clipBehavior: clipBehavior,
+              restorationId: restorationId,
+              scribbleEnabled: scribbleEnabled,
+              enableIMEPersonalizedLearning: enableIMEPersonalizedLearning,
+              contextMenuBuilder: contextMenuBuilder,
+              canRequestFocus: canRequestFocus,
+              spellCheckConfiguration: spellCheckConfiguration,
+              magnifierConfiguration: magnifierConfiguration,
             );
           },
           onChanged: onChanged,

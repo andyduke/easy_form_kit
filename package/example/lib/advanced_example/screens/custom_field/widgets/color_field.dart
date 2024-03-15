@@ -4,15 +4,11 @@ import 'package:easy_form_kit/easy_form_kit.dart';
 import 'package:easy_form_example/advanced_example/screens/custom_field/widgets/color_controller.dart';
 
 class ColorField extends EasyFormGenericField<Color> {
-  ColorField({
-    Key? key,
-    required ColorController controller,
-    ValueChanged<Color?>? onChange,
-  }) : super(
-          key: key,
-          controller: controller,
-          onChange: onChange,
-        );
+  const ColorField({
+    super.key,
+    required ColorController super.controller,
+    super.onChange,
+  });
 
   void _change() {
     value = _getRandomColor();

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:easy_form_kit/easy_form_kit.dart';
 
 class ErrorDisplayerScreen extends StatelessWidget {
+  const ErrorDisplayerScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,7 +43,7 @@ class ErrorDisplayerScreen extends StatelessWidget {
                         onChanged: onChangedHandler,
                       ),
                     ),
-                    EasyFormFieldError(
+                    const EasyFormFieldError(
                       name: 'switch',
                       textStyle: TextStyle(color: Colors.red),
                     ),
@@ -50,7 +52,7 @@ class ErrorDisplayerScreen extends StatelessWidget {
                     EasyTextFormField(
                       name: 'username',
                       initialValue: 'John',
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         hintText: 'Enter your username',
                       ),
                       validator: (value, [values]) {
@@ -76,8 +78,8 @@ class ErrorDisplayerScreen extends StatelessWidget {
                       },
                     ),
 
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 24),
+                    const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 24),
                       child: Text(
                         'Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Sed dapibus, ante ultricies adipiscing pulvinar, enim tellus volutpat odio, vel pretium ligula purus vel ligula. In posuere justo eget libero. Cras consequat quam sit amet metus. Sed vitae nulla. Cras imperdiet sapien vitae ipsum. Curabitur tristique. Aliquam non tellus eget sem commodo tincidunt. Phasellus cursus nunc. Integer vel mi. Aenean rutrum libero sit amet enim. Nunc elementum, erat eu volutpat ultricies, eros justo scelerisque leo, quis sollicitudin purus ipsum at purus. Aenean ut nulla.\n\n'
                         'Donec sit amet nisl in elit consequat vehicula. Ut leo ligula, lacinia vitae, tempor vel, eleifend vitae, odio. Cras aliquet dolor a justo. Ut molestie ornare sem. Sed est augue, euismod sed, ultrices suscipit, commodo a, nibh. Sed non sem vel mi pretium adipiscing. Nam nec sem. Quisque vel eros euismod odio convallis tincidunt. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Integer a est ut turpis adipiscing eleifend. Cras feugiat mollis metus. Nulla facilisi. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Vivamus vitae leo. In a tortor. Nunc odio. Etiam hendrerit diam at diam. Nullam ac diam nec neque fringilla faucibus.',
@@ -91,7 +93,7 @@ class ErrorDisplayerScreen extends StatelessWidget {
                           EasyFormSaveButton.text('Sign In'),
                           const SizedBox(width: 24),
                           TextButton(
-                            child: Text('Back'),
+                            child: const Text('Back'),
                             onPressed: () => Navigator.of(context).pop(),
                           ),
                         ],

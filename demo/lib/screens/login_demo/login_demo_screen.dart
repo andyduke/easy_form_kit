@@ -1,5 +1,5 @@
 import 'package:demo/screens/logged/logged_screen.dart';
-import 'package:easy_form_kit/easy_form.dart';
+import 'package:easy_form_kit/easy_form_kit.dart';
 import 'package:flutter/material.dart';
 
 class LoginDemoScreen extends StatelessWidget {
@@ -11,14 +11,14 @@ class LoginDemoScreen extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
             child: EasyForm(
-              onSave: (values) async {
+              onSave: (values, form) async {
                 return Future.delayed(const Duration(seconds: 3), () {
                   return <String, dynamic>{
                     'hasError': false,
                   };
                 });
               },
-              onSaved: (response) {
+              onSaved: (response, values, form) {
                 if (response['hasError']) {
                   _alert(context, response['error']);
                 } else {
@@ -38,8 +38,8 @@ class LoginDemoScreen extends StatelessWidget {
                     decoration: const InputDecoration(
                       hintText: 'Enter your username',
                     ),
-                    validator: (value) {
-                      if (value.isEmpty) {
+                    validator: (value, [values]) {
+                      if (value?.isEmpty ?? false) {
                         return 'Please enter some text';
                       }
                       return null;
@@ -52,8 +52,8 @@ class LoginDemoScreen extends StatelessWidget {
                       hintText: 'Enter your password',
                     ),
                     obscureText: true,
-                    validator: (value) {
-                      if (value.isEmpty) {
+                    validator: (value, [values]) {
+                      if (value?.isEmpty ?? false) {
                         return 'Please enter some text';
                       }
                       return null;

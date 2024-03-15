@@ -5,6 +5,8 @@ class ClearValueScreen extends StatelessWidget {
   final TextEditingController usernameController =
       TextEditingController(text: '');
 
+  ClearValueScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,7 +32,7 @@ class ClearValueScreen extends StatelessWidget {
                     decoration: InputDecoration(
                       hintText: 'Enter your username',
                       suffixIcon: IconButton(
-                        icon: Icon(Icons.clear),
+                        icon: const Icon(Icons.clear),
                         onPressed: () => usernameController.clear(),
                       ),
                     ),
@@ -62,7 +64,7 @@ class ClearValueScreen extends StatelessWidget {
                         EasyFormSaveButton.text('Sign In'),
                         const SizedBox(width: 24),
                         TextButton(
-                          child: Text('Back'),
+                          child: const Text('Back'),
                           onPressed: () => Navigator.of(context).pop(),
                         ),
                       ],
@@ -86,7 +88,7 @@ class ClearValueScreen extends StatelessWidget {
         content: Text(text),
         actions: [
           TextButton(
-            child: Text('OK'),
+            child: const Text('OK'),
             onPressed: () => Navigator.of(context).pop(),
           ),
         ],

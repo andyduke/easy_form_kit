@@ -1,5 +1,3 @@
-library easy_form;
-
 import 'package:flutter/foundation.dart';
 
 /// Base controller class for use with custom form fields.
@@ -28,7 +26,7 @@ class EasyFormFieldController<T> extends ValueNotifier<T?> {
       : _value = value,
         super(value);
 
-  EasyFormFieldController.fromValue(T? value) : super(value ?? null);
+  EasyFormFieldController.fromValue(T? value) : super((value ?? null) as T?);
 
   T? get value => _value;
 

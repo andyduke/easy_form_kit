@@ -1,4 +1,5 @@
 import 'package:easy_form_kit/src/easy_form.dart';
+import 'package:easy_form_kit/src/easy_form_default_settings.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -29,6 +30,10 @@ typedef EasyFormSaveIndicatorLayoutBuilder = Widget
 ///   ),
 /// ),
 /// ```
+///
+/// See also:
+///  * [EasyFormDefaultSettings], where the builders can be set globally.
+///
 class EasyFormSaveIndicator extends StatelessWidget {
   /// Default indicator size
   static const Size kIndicatorSize = const Size.square(32);
@@ -46,12 +51,20 @@ class EasyFormSaveIndicator extends StatelessWidget {
 
   /// The builder of the indicator on top of a child, displayed
   /// during the save process.
+  ///
+  /// See also:
+  ///  * [EasyFormDefaultSettings], where the indicator builder can be set globally.
+  ///
   final EasyFormSaveIndicatorBuilder? indicatorBuilder;
 
   /// Indicator size
   final Size indicatorSize;
 
   /// Indicator layout builder
+  ///
+  /// See also:
+  ///  * [EasyFormDefaultSettings], where the layout builder can be set globally.
+  ///
   final EasyFormSaveIndicatorLayoutBuilder? layoutBuilder;
 
   /// Creates a form save indicator widget.
@@ -77,8 +90,11 @@ class EasyFormSaveIndicator extends StatelessWidget {
 
   static Widget _defaultIndicatorBuilder(
       BuildContext context, Size size, EasyFormAdaptivity adaptivity) {
-    Widget indicator;
+    final ThemeData theme = Theme.of(context);
+    final Color? color =
+        theme.buttonTheme.colorScheme?.primary ?? theme.colorScheme.onPrimary;
 
+    Widget indicator;
     switch (adaptivity) {
       case EasyFormAdaptivity.cupertino:
         indicator = CupertinoActivityIndicator();
@@ -88,14 +104,20 @@ class EasyFormSaveIndicator extends StatelessWidget {
       case EasyFormAdaptivity.material:
       default:
         indicator = CircularProgressIndicator(
-          strokeWidth: 3,
+          strokeWidth: 2,
+          color: color,
         );
         break;
     }
 
     return SizedBox.fromSize(
       size: size,
-      child: indicator,
+      child: Theme(
+        data: theme.copyWith(
+          colorScheme: theme.colorScheme.copyWith(secondary: color),
+        ),
+        child: indicator,
+      ),
     );
   }
 
@@ -128,7 +150,7 @@ class EasyFormSaveIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final EasyFormState? form = EasyForm.of(context);
+    final EasyFormState? form = EasyForm.maybeOf(context);
     if (form == null) return child;
 
     return ValueListenableBuilder<bool>(
@@ -138,11 +160,20 @@ class EasyFormSaveIndicator extends StatelessWidget {
         final Widget? indicator = isSaving
             ? KeyedSubtree(
                 key: ValueKey('save-indicator-overlay'),
-                child: (indicatorBuilder ?? defaultIndicatorBuilder)
+                child: (indicatorBuilder ??
+                        EasyFormDefaultSettings.maybeOf(context)
+                            ?.saveIndicator
+                            ?.builder ??
+                        defaultIndicatorBuilder)
                     .call(context, indicatorSize, form.adaptivity),
               )
             : null;
-        return (layoutBuilder ?? defaultLayoutBuilder).call(
+        return (layoutBuilder ??
+                EasyFormDefaultSettings.maybeOf(context)
+                    ?.saveIndicator
+                    ?.layoutBuilder ??
+                defaultLayoutBuilder)
+            .call(
           context,
           KeyedSubtree(
             key: ValueKey('save-indicator-child'),

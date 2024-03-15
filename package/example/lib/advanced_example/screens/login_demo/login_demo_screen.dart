@@ -3,6 +3,8 @@ import 'package:easy_form_kit/easy_form_kit.dart';
 import 'package:easy_form_example/advanced_example/screens/logged/logged_screen.dart';
 
 class LoginDemoScreen extends StatelessWidget {
+  const LoginDemoScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,7 +26,7 @@ class LoginDemoScreen extends StatelessWidget {
                 } else {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => LoggedScreen(),
+                      builder: (context) => const LoggedScreen(),
                     ),
                   );
                 }
@@ -68,7 +70,7 @@ class LoginDemoScreen extends StatelessWidget {
                         EasyFormSaveButton.text('Sign In'),
                         const SizedBox(width: 24),
                         TextButton(
-                          child: Text('Back'),
+                          child: const Text('Back'),
                           onPressed: () => Navigator.of(context).pop(),
                         ),
                       ],
@@ -87,7 +89,7 @@ class LoginDemoScreen extends StatelessWidget {
     return showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Error'),
+        title: const Text('Error'),
         content: Text(text),
       ),
     );

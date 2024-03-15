@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../easy_form.dart';
+import 'package:easy_form_kit/src/easy_form.dart';
 
 /// Button builder signature
 typedef EasyFormButtonBuilder = Widget Function(
@@ -28,6 +28,6 @@ class EasyFormButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return builder(context, EasyForm.of(context));
+    return builder(context, EasyForm.maybeOf(context));
   }
 }

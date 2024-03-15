@@ -1,7 +1,8 @@
+import 'package:easy_form_kit/src/easy_form_default_settings.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'action_button.dart';
-import '../easy_form.dart';
+import 'package:easy_form_kit/src/buttons/action_button.dart';
+import 'package:easy_form_kit/src/easy_form.dart';
 
 /// Signature for the save indicator builder
 typedef EasyFormSaveButtonIndicatorBuilder = Widget Function(
@@ -19,6 +20,9 @@ typedef EasyFormSaveButtonLayoutBuilder = Widget Function(
 /// in which you can specify any widget in the `child` argument as
 /// the button content, and the [EasyFormSaveButton.text] constructor,
 /// in which you can specify the text on the button.
+///
+/// See also:
+///  * [EasyFormDefaultSettings], where the builders can be set globally.
 ///
 class EasyFormSaveButton extends EasyFormActionButton {
   /// Default indicator size
@@ -80,19 +84,25 @@ class EasyFormSaveButton extends EasyFormActionButton {
   ///
   /// See also:
   ///
+  ///  * [EasyFormDefaultSettings], where the indicator builder can be set globally.
   ///  * [defaultIndicatorBuilder], where the indicator builder can be set globally.
   @protected
-  EasyFormSaveButtonIndicatorBuilder get indicatorBuilder =>
-      _indicatorBuilder ?? defaultIndicatorBuilder;
+  EasyFormSaveButtonIndicatorBuilder getIndicatorBuilder(
+          BuildContext context) =>
+      _indicatorBuilder ??
+      EasyFormDefaultSettings.maybeOf(context)?.saveButton?.indicatorBuilder ??
+      defaultIndicatorBuilder;
 
   /// Button content layout builder.
   ///
   /// See also:
-  ///
+  ///  * [EasyFormDefaultSettings], where the layout builder can be set globally.
   ///  * [defaultLayoutBuilder], where the layout builder can be set globally.
   @protected
-  EasyFormSaveButtonLayoutBuilder get layoutBuilder =>
-      _layoutBuilder ?? defaultLayoutBuilder;
+  EasyFormSaveButtonLayoutBuilder getLayoutBuilder(BuildContext context) =>
+      _layoutBuilder ??
+      EasyFormDefaultSettings.maybeOf(context)?.saveButton?.layoutBuilder ??
+      defaultLayoutBuilder;
 
   @override
   void handleAction(BuildContext context, EasyFormState form) {
@@ -103,11 +113,12 @@ class EasyFormSaveButton extends EasyFormActionButton {
   Widget bodyBuilder(
       BuildContext context, Widget child, bool isSaving, EasyFormState form) {
     final Widget body = super.bodyBuilder(context, child, isSaving, form);
-    final Widget layout = layoutBuilder(
+    final Widget layout = getLayoutBuilder(context).call(
       context,
       isSaving ? Opacity(child: body, opacity: 0) : body,
       isSaving
-          ? indicatorBuilder.call(context, indicatorSize, form.adaptivity)
+          ? getIndicatorBuilder(context)
+              .call(context, indicatorSize, form.adaptivity)
           : SizedBox.fromSize(size: indicatorSize),
     );
 
@@ -117,7 +128,10 @@ class EasyFormSaveButton extends EasyFormActionButton {
   // Default builders
 
   @override
-  EasyFormActionButtonBuilder get builder => super.builder ?? defaultBuilder;
+  EasyFormActionButtonBuilder getDefaultBuilder(BuildContext context) =>
+      EasyFormDefaultSettings.maybeOf(context)?.saveButton?.builder ??
+      super.getDefaultBuilder(context) ??
+      defaultBuilder;
 
   /// The default button builder, creates an [ElevatedButton] or [CupertinoButton.filled].
   /// You can reassign to your builder globally so that you
@@ -125,7 +139,7 @@ class EasyFormSaveButton extends EasyFormActionButton {
   /// you create a widget.
   ///
   /// See also:
-  ///
+  ///  * [EasyFormDefaultSettings], where the builder can be set globally.
   ///  * [EasyFormActionButton.defaultBuilder] which is the default.
   ///
   static EasyFormActionButtonBuilder defaultBuilder =
@@ -139,6 +153,10 @@ class EasyFormSaveButton extends EasyFormActionButton {
   ///
   /// By default, this is a [Stack] with a centered indicator
   /// on top of the button's content.
+  ///
+  /// See also:
+  ///  * [EasyFormDefaultSettings], where the layout builder can be set globally.
+  ///
   static EasyFormSaveButtonLayoutBuilder defaultLayoutBuilder =
       _defaultLayoutBuilder;
 
@@ -171,7 +189,8 @@ class EasyFormSaveButton extends EasyFormActionButton {
   static Widget _defaultIndicatorBuilder(
       BuildContext context, Size size, EasyFormAdaptivity adaptivity) {
     final ThemeData theme = Theme.of(context);
-    final Color? color = theme.colorScheme.onPrimary;
+    final Color? color =
+        theme.buttonTheme.colorScheme?.primary ?? theme.colorScheme.onPrimary;
 
     Widget indicator;
     switch (adaptivity) {
@@ -189,9 +208,8 @@ class EasyFormSaveButton extends EasyFormActionButton {
         break;
     }
 
-    return SizedBox(
-      width: size.width,
-      height: size.height,
+    return SizedBox.fromSize(
+      size: size,
       child: Theme(
         data: theme.copyWith(
           colorScheme: theme.colorScheme.copyWith(secondary: color),
